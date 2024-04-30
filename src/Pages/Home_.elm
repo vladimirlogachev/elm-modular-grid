@@ -4,13 +4,13 @@ import Color
 import Effect
 import Element exposing (..)
 import Element.Background as Background
-import Element.Font as Font
+import Html.Attributes
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
 import Shared
 import View exposing (View)
-import Window exposing (ScreenClass(..))
+import Window exposing (ScreenClass(..), heightOfGridSteps, widthOfGridSteps)
 
 
 type alias Model =
@@ -47,7 +47,12 @@ view shared =
                 BigScreen ->
                     Background.color Color.bigScreenContentBackground
             ]
-            [ column [ spacing (Window.spacingEqualToGridGutter shared.window.screenClass), width fill, Background.color Color.white ]
+            [ column
+                [ spacing (Window.spacingEqualToGridGutter shared.window.screenClass)
+                , width fill
+                , Background.color Color.white
+                , padding (Window.spacingEqualToGridGutter shared.window.screenClass)
+                ]
                 [ text "elm-modular-grid"
                 , text
                     ("w: "
@@ -81,6 +86,10 @@ view shared =
                 , viewBox2 shared 3
                 ]
             , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 11
+                , viewBox2 shared 1
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
                 [ viewBox2 shared 1
                 , viewBox2 shared 1
                 , viewBox2 shared 1
@@ -90,7 +99,16 @@ view shared =
                 , viewBox2 shared 1
                 , viewBox2 shared 1
                 , viewBox2 shared 1
-                , viewBox2 shared 3
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 1
+                , viewBox2 shared 11
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 1
                 ]
             , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
                 [ viewBox2 shared 4
@@ -101,21 +119,13 @@ view shared =
     }
 
 
-
--- viewBox : Shared.Model -> Int -> Element msg
--- viewBox shared num =
---     column [ Background.color Color.white,  ] [ text <| String.fromInt num ]
-
-
 viewBox2 : Shared.Model -> Int -> Element msg
 viewBox2 shared num =
     column
-        [ Background.color Color.white
-
-        -- , width (fillPortion num)
-        , width (fill |> minimum (Window.gridSteps3 shared.window num |> floor))
-
-        -- , height (fill |> minimum (Window.gridSteps3 shared.window num |> floor))
-        , height (px 60)
-        ]
-        [ text <| String.fromInt num ]
+        ([ Background.color Color.white
+         , htmlAttribute <| Html.Attributes.style "color" "red"
+         ]
+            ++ heightOfGridSteps shared.window (min num 3)
+            ++ widthOfGridSteps shared.window num
+        )
+        [ column [ centerX, centerY ] [ text <| String.fromInt num ] ]

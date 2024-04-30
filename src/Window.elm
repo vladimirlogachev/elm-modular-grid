@@ -4,14 +4,17 @@ module Window exposing
     , WindowSizeJs
     , actualContentWidth
     , fromWindowSizeJs
-    , gridSteps3
+    , heightOfGridSteps
     , initWindowSizeJs
     , perScreen
     , spacingEqualToGridGutter
+    , widthOfGridSteps
     , windowSizeJsDecoder
     )
 
 import Constants
+import Element exposing (Attribute, Element)
+import Html.Attributes
 import Json.Decode
 
 
@@ -101,8 +104,10 @@ gridStepsCount =
     12
 
 
-gridSteps3 : Window -> Int -> Float
-gridSteps3 window numberOfSteps =
+{-| Implementation detail
+-}
+widthOfGridStepsFloat : Window -> Int -> Float
+widthOfGridStepsFloat window numberOfSteps =
     let
         gutterCountBetween =
             numberOfSteps - 1
@@ -118,3 +123,37 @@ gridSteps3 window numberOfSteps =
                 / gridStepsCount
     in
     (stepWidth * toFloat numberOfSteps) + (toFloat gutterWidth * toFloat gutterCountBetween)
+
+
+widthOfGridSteps : Window -> Int -> List (Attribute msg)
+widthOfGridSteps window numberOfSteps =
+    let
+        baseWidth =
+            widthOfGridStepsFloat window numberOfSteps
+    in
+    [ -- We must prevent elements of width 1 to grow to all 12
+      Element.width Element.fill
+
+    -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
+    , Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromInt (ceiling baseWidth) ++ "px")
+
+    -- This is what actually sets the width. We must use float to maintain constant gutters between elements of different rows
+    , Element.htmlAttribute <| Html.Attributes.style "min-width" (String.fromFloat baseWidth ++ "px")
+    ]
+
+
+heightOfGridSteps : Window -> Int -> List (Attribute msg)
+heightOfGridSteps window numberOfSteps =
+    let
+        baseHeight =
+            widthOfGridStepsFloat window numberOfSteps
+    in
+    [ -- We must prevent elements of width 1 to grow to all 12
+      Element.height Element.fill
+
+    -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
+    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling baseHeight) ++ "px")
+
+    -- This is what actually sets the width. We must use float to maintain constant gutters between elements of different rows
+    , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
+    ]

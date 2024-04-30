@@ -1,8 +1,10 @@
 port module Layouts.WebappLayout exposing (Model, Msg, Props, layout)
 
+import Color
 import Constants
 import Effect exposing (Effect)
 import Element exposing (..)
+import Element.Background as Background
 import Layout exposing (Layout)
 import Route exposing (Route)
 import Shared
@@ -78,15 +80,17 @@ view shared { content } =
 
             innerElement =
                 column
-                    ((case shared.screenClass of
+                    ((case shared.window.screenClass of
                         SmallScreen ->
                             [ width (fill |> minimum Constants.minimalSupportedMobileScreenWidth)
-                            , padding Constants.layoutPaddingSmallScreen
+                            , padding Constants.gridMarginSmallScreen
+                            , Background.color Color.gridMarginBackground
                             ]
 
                         BigScreen ->
                             [ width (fill |> maximum Constants.contentWithPaddingsMaxWidthBigScreen)
-                            , padding Constants.layoutPaddingBigScreen
+                            , padding Constants.gridMarginBigScreen
+                            , Background.color Color.gridMarginBackground
                             ]
                      )
                         ++ [ centerX ]

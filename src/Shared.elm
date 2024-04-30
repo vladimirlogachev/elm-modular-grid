@@ -18,7 +18,7 @@ import Json.Decode
 import Route exposing (Route)
 import Shared.Model
 import Shared.Msg
-import Window exposing (WindowSize)
+import Window exposing (Window, WindowSizeJs)
 
 
 
@@ -26,13 +26,13 @@ import Window exposing (WindowSize)
 
 
 type alias Flags =
-    { windowSize : WindowSize }
+    { windowSize : WindowSizeJs }
 
 
 decoder : Json.Decode.Decoder Flags
 decoder =
     Json.Decode.map Flags
-        (Json.Decode.field "windowSize" Window.windowSizeDecoder)
+        (Json.Decode.field "windowSize" Window.windowSizeJsDecoder)
 
 
 
@@ -57,8 +57,7 @@ init flagsResult _ =
 
 initReady : Flags -> ( Model, Effect Msg )
 initReady flags =
-    ( { window = flags.windowSize
-      , screenClass = Window.classifyScreen flags.windowSize
+    ( { window = Window.fromWindowSizeJs flags.windowSize
       }
     , Effect.none
     )
@@ -66,8 +65,7 @@ initReady flags =
 
 meaninglessDefaultModel : Shared.Model.Model
 meaninglessDefaultModel =
-    { window = Window.initWindowSize
-    , screenClass = Window.classifyScreen Window.initWindowSize
+    { window = Window.fromWindowSizeJs Window.initWindowSizeJs
     }
 
 
@@ -86,9 +84,9 @@ update _ msg model =
             gotNewWindowSize model newWindowSize
 
 
-gotNewWindowSize : Model -> WindowSize -> ( Model, Effect Msg )
+gotNewWindowSize : Model -> WindowSizeJs -> ( Model, Effect Msg )
 gotNewWindowSize model newWindowSize =
-    ( { model | window = newWindowSize, screenClass = Window.classifyScreen newWindowSize }, Effect.none )
+    ( { model | window = Window.fromWindowSizeJs newWindowSize }, Effect.none )
 
 
 

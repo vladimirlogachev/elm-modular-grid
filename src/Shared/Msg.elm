@@ -1,6 +1,6 @@
 module Shared.Msg exposing (Msg(..))
 
-import Window exposing (WindowSize)
+import Window exposing (WindowSizeJs)
 
 
 {-| Normally, this value would live in "Shared.elm"
@@ -11,4 +11,4 @@ own file, so they can be imported by `Effect.elm`
 
 -}
 type Msg
-    = GotNewWindowSize WindowSize
+    = GotNewWindowSize WindowSizeJs

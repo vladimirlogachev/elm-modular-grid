@@ -10,14 +10,29 @@ bigScreenStartsFrom : Int
 bigScreenStartsFrom =
     720
 
+
 {-| Includes minimal margins.
 -}
 contentWithPaddingsMaxWidthBigScreen : Int
 contentWithPaddingsMaxWidthBigScreen =
     1512
 
-layoutPaddingBigScreen : Int
-layoutPaddingBigScreen = 32
 
-layoutPaddingSmallScreen : Int
-layoutPaddingSmallScreen = 16
+gridMarginBigScreen : Int
+gridMarginBigScreen =
+    32
+
+
+gridMarginSmallScreen : Int
+gridMarginSmallScreen =
+    16
+
+
+gridGutterBigScreen : Int
+gridGutterBigScreen =
+    32
+
+
+gridGutterSmallScreen : Int
+gridGutterSmallScreen =
+    16

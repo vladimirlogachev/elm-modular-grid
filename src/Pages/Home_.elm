@@ -35,15 +35,87 @@ page shared _ =
 view : Shared.Model -> View msg
 view shared =
     { title = "elm-modular-grid"
-    , attributes = [ Font.color Color.white, Background.color Color.grey1 ]
+    , attributes = [ Background.color Color.bodyBackground ]
     , element =
-        column [ spacing 20 ]
-            [ text "elm-modular-grid"
-            , text
-                ("w: "
-                    ++ String.fromInt shared.window.width
-                    ++ ", h: "
-                    ++ String.fromInt shared.window.height
-                )
+        column
+            [ width fill
+            , spacing (Window.spacingEqualToGridGutter shared.window.screenClass)
+            , case shared.window.screenClass of
+                SmallScreen ->
+                    Background.color Color.smallScreenContentBackground
+
+                BigScreen ->
+                    Background.color Color.bigScreenContentBackground
+            ]
+            [ column [ spacing (Window.spacingEqualToGridGutter shared.window.screenClass), width fill, Background.color Color.white ]
+                [ text "elm-modular-grid"
+                , text
+                    ("w: "
+                        ++ String.fromInt shared.window.width
+                        ++ ", h: "
+                        ++ String.fromInt shared.window.height
+                    )
+                ]
+
+            --  width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass)
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 3
+                , viewBox2 shared 3
+                , viewBox2 shared 3
+                , viewBox2 shared 3
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 1
+                , viewBox2 shared 5
+                , viewBox2 shared 1
+                , viewBox2 shared 5
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 2
+                , viewBox2 shared 4
+                , viewBox2 shared 2
+                , viewBox2 shared 4
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 9
+                , viewBox2 shared 3
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 1
+                , viewBox2 shared 3
+                ]
+            , row [ width fill, spacing (Window.spacingEqualToGridGutter shared.window.screenClass) ]
+                [ viewBox2 shared 4
+                , viewBox2 shared 4
+                , viewBox2 shared 4
+                ]
             ]
     }
+
+
+
+-- viewBox : Shared.Model -> Int -> Element msg
+-- viewBox shared num =
+--     column [ Background.color Color.white,  ] [ text <| String.fromInt num ]
+
+
+viewBox2 : Shared.Model -> Int -> Element msg
+viewBox2 shared num =
+    column
+        [ Background.color Color.white
+
+        -- , width (fillPortion num)
+        , width (fill |> minimum (Window.gridSteps3 shared.window num |> floor))
+
+        -- , height (fill |> minimum (Window.gridSteps3 shared.window num |> floor))
+        , height (px 60)
+        ]
+        [ text <| String.fromInt num ]

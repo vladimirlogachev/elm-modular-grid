@@ -9,7 +9,7 @@ import Element exposing (..)
 
 black : Color
 black =
-    rgb255 0x1a 0x1a 0x1a
+    rgb255 0x1A 0x1A 0x1A
 
 
 white : Color
@@ -17,11 +17,21 @@ white =
     rgb255 255 255 255
 
 
-grey1 : Color
-grey1 =
-    rgb255 0x1a 0x1a 0x1a
+bigScreenContentBackground : Color
+bigScreenContentBackground =
+    rgb255 0xBB 0xDE 0xFB
 
 
-blue1 : Color
-blue1 =
-    rgb255 0x33 0x88 0xED
+smallScreenContentBackground : Color
+smallScreenContentBackground =
+    rgb255 0xB2 0xEB 0xF2
+
+
+bodyBackground : Color
+bodyBackground =
+    rgb255 0xCF 0xD8 0xDC
+
+
+gridMarginBackground : Color
+gridMarginBackground =
+    rgb255 0xFF 0xE0 0xB2

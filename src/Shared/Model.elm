@@ -1,6 +1,6 @@
 module Shared.Model exposing (Model)
 
-import Window exposing (ScreenClass, WindowSize)
+import Window exposing (Window)
 
 
 {-| Normally, this value would live in "Shared.elm"
@@ -11,6 +11,5 @@ own file, so they can be imported by `Effect.elm`
 
 -}
 type alias Model =
-    { window : WindowSize
-    , screenClass : ScreenClass
+    { window : Window
     }

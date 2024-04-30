@@ -24,9 +24,9 @@
         {
           "rel": "icon",
           "type": "image/svg+xml",
-          "href": "/icons/favicon.svg"
+          "href": "icons/favicon.svg"
         },
-        { "rel": "stylesheet", "href": "/styles/reset.css" }
+        { "rel": "stylesheet", "href": "styles/reset.css" }
       ],
       "script": [
       ]

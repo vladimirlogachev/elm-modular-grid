@@ -131,10 +131,12 @@ widthOfGridSteps window numberOfSteps =
         baseWidth =
             widthOfGridStepsFloat window numberOfSteps
     in
-    [ -- We must prevent elements of width 1 to grow to all 12
+    [ -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
       Element.width Element.fill
 
-    -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
+    -- We must prevent elements of width 1 to grow to all 12.
+    -- If we use float value here, we would effectively cancel the "width fill" attribute.
+    -- So we use Int to allow to grow just a bit, up to 1 px.
     , Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromInt (ceiling baseWidth) ++ "px")
 
     -- This is what actually sets the width. We must use float to maintain constant gutters between elements of different rows
@@ -148,12 +150,7 @@ heightOfGridSteps window numberOfSteps =
         baseHeight =
             widthOfGridStepsFloat window numberOfSteps
     in
-    [ -- We must prevent elements of width 1 to grow to all 12
-      Element.height Element.fill
-
-    -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
+    [ Element.height Element.fill
     , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling baseHeight) ++ "px")
-
-    -- This is what actually sets the width. We must use float to maintain constant gutters between elements of different rows
     , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
     ]

@@ -72,7 +72,7 @@ subscriptions _ =
 view : Shared.Model -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
 view shared { content } =
     { title = content.title
-    , attributes = content.attributes
+    , attributes = content.attributes ++ [ width (fill |> minimum Constants.minimalSupportedMobileScreenWidth) ]
     , element =
         let
             outerElement =

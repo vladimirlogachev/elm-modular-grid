@@ -4,7 +4,6 @@ import Color
 import Effect
 import Element exposing (..)
 import Element.Background as Background
-import Html.Attributes
 import Layouts
 import Page exposing (Page)
 import Route exposing (Route)
@@ -122,9 +121,7 @@ view shared =
 viewBox2 : Shared.Model -> Int -> Element msg
 viewBox2 shared num =
     column
-        ([ Background.color Color.white
-         , htmlAttribute <| Html.Attributes.style "color" "red"
-         ]
+        ([ Background.color Color.white ]
             ++ heightOfGridSteps shared.window (min num 3)
             ++ widthOfGridSteps shared.window num
         )

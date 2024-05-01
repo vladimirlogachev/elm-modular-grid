@@ -1,7 +1,7 @@
 module GridLayout2 exposing
-    ( WindowSize, windowSizeDecoder, ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), init, update
+    ( ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
-    , gridRow, gridColumn, gridBox
+    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, widthOfGridStepsFloat
     )
 
 {-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
@@ -9,7 +9,7 @@ module GridLayout2 exposing
 
 # Shared
 
-@docs WindowSize, windowSizeDecoder, ScreenClass, LayoutState, LayoutConfig, GridMargin, init, update
+@docs ScreenClass, LayoutState, LayoutConfig, GridMargin, WindowSize, windowSizeDecoder, init, update
 
 
 # Layout
@@ -19,10 +19,7 @@ module GridLayout2 exposing
 
 # Page
 
-@docs gridRow, gridColumn, gridBox
-
-
-# Internal
+@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, widthOfGridStepsFloat
 
 -}
 
@@ -63,6 +60,12 @@ type ScreenClass
 
 
 {-| Layout state. A value of this type contains everything needed to render a layout or any grid-aware element.
+
+  - `window` – the current window size.
+  - `screenClass` – the current screen class.
+  - `config` – the layout configuration. Not to be changed during the app lifecycle, or even accessed directly.
+  - `grid` – the current grid settings, calculated based on the window size and the screen class. Use them anywhere in the app.
+
 -}
 type alias LayoutState =
     { window : WindowSize
@@ -78,35 +81,32 @@ type alias LayoutState =
 
 
 {-| Layout configuration. Needs to be passed in the `init` function once per app.
+
+  - `mobileScreen.minGridWidth` – Includes grid margins.
+    The MobileScreen Figma layouts should use this width first.
+    If window width is less than this value, we display horizontal scroll.
+  - `mobileScreen.maxGridWidth` – Includes grid margins.
+    The MobileScreen Figma layouts can use this width for an additional example.
+    If not set, then the grid will stretch util the next screen breakpoint.
+  - `desktopScreen.minGridWidth` – Includes grid margins.
+    The DesktopScreen Figma layouts should use this width first.
+    If window width is equal or greater than this value, the screen class is DesktopScreen.
+  - `desktopScreen.maxGridWidth` – Includes grid margins.
+    The DesktopScreen Figma layouts can use this width for an additional example.
+    If not set, then the grid will stretch indefinitely.
+  - `columnCount` – The number of columns in the grid.
+
 -}
 type alias LayoutConfig =
     { mobileScreen :
-        { {- Includes grid margins.
-             The MobileScreen Figma layouts should use this width first.
-             If window width is less than this value, we display horizontal scroll.
-          -}
-          minGridWidth : Int
-
-        {- Includes grid margins.
-           The MobileScreen Figma layouts can use this width for an additional example.
-           If not set, then the grid will stretch util the next screen breakpoint
-        -}
+        { minGridWidth : Int
         , maxGridWidth : Maybe Int
         , columnCount : Int
         , gutter : Int
         , margin : GridMargin
         }
     , desktopScreen :
-        { {- Includes grid margins.
-             The DesktopScreen Figma layouts should use this width first.
-             If window width is equal or greater than this value, the screen class is DesktopScreen.
-          -}
-          minGridWidth : Int
-
-        {- Includes grid margins.
-           The DesktopScreen Figma layouts can use this width for an additional example.
-           If not set, then the grid will stretch indefinitely
-        -}
+        { minGridWidth : Int
         , maxGridWidth : Maybe Int
         , columnCount : Int
         , gutter : Int
@@ -332,10 +332,6 @@ heightOfGridSteps layout numberOfSteps =
     , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling baseHeight) ++ "px")
     , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
     ]
-
-
-
--- INTERNAL
 
 
 {-| An implementation detail, but can be used directly in applications without `elm-ui`.

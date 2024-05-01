@@ -4,6 +4,21 @@ Responsive modular grid layouts for Elm.
 
 Designed for `elm-ui` and `elm-land`, but can be useful with `elm-css` or even pure CSS too.
 
+## What is a modular grid?
+
+A modular grid is a well-known pattern in design which helps to establish a visual rhythm and produce layouts designs quickly and in a controlled way. A simple explanation is given [Design Trampoline. Module 5: Grid](https://designtrampoline.org/module/grid/grid/), and more info can be found on the web.
+
+In the code, we refer to the following elements of grid:
+
+![Grid elements](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/grid-elements.svg?raw=true)
+
+The full potential of modular grid design will be realized if the layouts are designed in Figma or another similar tool before coding. But this is optional.
+
+## Features
+
+- Responsive grid columns (step width is variable, columns can grow, but gutter and minimal margin are fixed).
+- Allows to establish a vertical rhythm using column width, and maintain proportions of the grid elements on different screen sizes.
+
 ## Example usage with `elm-land` and `elm-ui`
 
 ### `elm.json`
@@ -176,7 +191,7 @@ view { layout } =
 
 ### Result
 
-![Image](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/example-usage-result.jpg?raw=true)
+![Result](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/example-usage-result.jpg?raw=true)
 
 ## Package Development
 

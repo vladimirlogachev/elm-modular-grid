@@ -17,6 +17,7 @@ mobileScreenContentBackground =
     rgb255 0xB2 0xEB 0xF2
 
 
+
 desktopScreenContentBackground : Color
 desktopScreenContentBackground =
     rgb255 0xBB 0xDE 0xFB
@@ -30,3 +31,5 @@ bodyBackground =
 gridMarginBackground : Color
 gridMarginBackground =
     rgb255 0xFF 0xE0 0xB2
+
+

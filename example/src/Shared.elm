@@ -32,7 +32,7 @@ type alias Flags =
 decoder : Json.Decode.Decoder Flags
 decoder =
     Json.Decode.map Flags
-        (Json.Decode.field "windowSize" GridLayout2.windowSizeJsDecoder)
+        (Json.Decode.field "windowSize" GridLayout2.windowSizeDecoder)
 
 
 

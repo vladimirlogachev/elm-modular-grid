@@ -1,22 +1,33 @@
 module GridLayout2 exposing
-    ( GridMargin(..)
-    , LayoutConfig
-    , LayoutState
-    , ScreenClass(..)
-    , WindowSize
-    , bodyAttributes
-    , gridBox
-    , gridColumn
-    , gridRow
-    , heightOfGridSteps
-    , init
-    , layoutInnerAttributes
-    , layoutOuterAttributes
-    , update
-    , widthOfGridSteps
+    ( WindowSize, windowSizeDecoder, ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), init, update
+    , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
+    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps
     , widthOfGridStepsFloat
-    , windowSizeJsDecoder
     )
+
+{-| test
+
+
+# Shared
+
+@docs WindowSize, windowSizeDecoder, ScreenClass, LayoutState, LayoutConfig, GridMargin, init, update
+
+
+# Layout
+
+@docs bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
+
+
+# Page
+
+@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps
+
+
+# Internal
+
+@docs widthOfGridStepsFloat
+
+-}
 
 import Element exposing (..)
 import Html.Attributes
@@ -27,24 +38,32 @@ import Json.Decode
 -- SHARED
 
 
+{-| TODO:
+-}
 type alias WindowSize =
     { width : Int
     , height : Int
     }
 
 
-windowSizeJsDecoder : Json.Decode.Decoder WindowSize
-windowSizeJsDecoder =
+{-| TODO:
+-}
+windowSizeDecoder : Json.Decode.Decoder WindowSize
+windowSizeDecoder =
     Json.Decode.map2 WindowSize
         (Json.Decode.field "width" Json.Decode.int)
         (Json.Decode.field "height" Json.Decode.int)
 
 
+{-| TODO:
+-}
 type ScreenClass
     = MobileScreen
     | DesktopScreen
 
 
+{-| TODO:
+-}
 type alias LayoutState =
     { window : WindowSize
     , screenClass : ScreenClass
@@ -58,6 +77,8 @@ type alias LayoutState =
     }
 
 
+{-| TODO:
+-}
 type alias LayoutConfig =
     { mobileScreen :
         { {- Includes grid margins.
@@ -94,11 +115,15 @@ type alias LayoutConfig =
     }
 
 
+{-| TODO:
+-}
 type GridMargin
     = SameAsGutter
     | GridMargin Int
 
 
+{-| TODO:
+-}
 init : LayoutConfig -> WindowSize -> LayoutState
 init config window =
     let
@@ -177,6 +202,8 @@ init config window =
     }
 
 
+{-| TODO:
+-}
 update : LayoutState -> WindowSize -> LayoutState
 update { config } window =
     init config window
@@ -186,16 +213,22 @@ update { config } window =
 -- LAYOUT
 
 
+{-| TODO:
+-}
 bodyAttributes : LayoutState -> List (Attribute msg)
 bodyAttributes layout =
     [ width (fill |> minimum layout.config.mobileScreen.minGridWidth) ]
 
 
+{-| TODO:
+-}
 layoutOuterAttributes : List (Attribute msg)
 layoutOuterAttributes =
     [ width fill ]
 
 
+{-| TODO:
+-}
 layoutInnerAttributes : LayoutState -> List (Attribute msg)
 layoutInnerAttributes layout =
     let
@@ -220,6 +253,8 @@ layoutInnerAttributes layout =
 -- PAGE
 
 
+{-| TODO:
+-}
 gridRow :
     LayoutState
     -> List (Element msg)
@@ -228,6 +263,8 @@ gridRow layout elements =
     row [ width fill, spacing layout.grid.gutter ] elements
 
 
+{-| TODO:
+-}
 gridColumn :
     LayoutState
     -> { widthSteps : Int }
@@ -238,6 +275,8 @@ gridColumn layout { widthSteps } attrs elements =
     column (widthOfGridSteps layout widthSteps ++ attrs) elements
 
 
+{-| TODO:
+-}
 gridBox :
     LayoutState
     ->
@@ -256,7 +295,7 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
         elements
 
 
-{-| Helper
+{-| TODO:
 -}
 widthOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 widthOfGridSteps layout numberOfSteps =
@@ -278,7 +317,7 @@ widthOfGridSteps layout numberOfSteps =
     ]
 
 
-{-| Helper
+{-| TODO:
 -}
 heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 heightOfGridSteps layout numberOfSteps =

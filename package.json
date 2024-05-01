@@ -5,7 +5,15 @@
   "private": true,
   "scripts": {
     "start": "elm-land server",
-    "build": "elm-land build"
+    "build": "elm-land build",
+    "typecheck": "npm run build",
+    "format-fix-all": "elm-format --yes .",
+    "format-validate": "elm-format --validate .",
+    "review": "elm-review",
+    "review-fix-interactive": "elm-review --fix",
+    "review-fix-all": "yes | elm-review --fix-all",
+    "check": "npm run typecheck && npm run format-validate && npm run review",
+    "precommit-fix": "npm run typecheck && npm run format-fix-all && npm run review-fix-all"
   },
   "author": "",
   "license": "MIT",
@@ -13,7 +21,6 @@
     "elm": "^0.19.1-6",
     "elm-format": "^0.8.7",
     "elm-review": "^2.11.1",
-    "elm-test": "^0.19.1-revision12",
     "elm-land": "^0.20.1"
   },
   "dependencies": {

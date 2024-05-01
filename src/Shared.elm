@@ -14,11 +14,11 @@ module Shared exposing
 
 import Browser.Events
 import Effect exposing (Effect)
+import GridLayout2 exposing (..)
 import Json.Decode
 import Route exposing (Route)
 import Shared.Model
 import Shared.Msg
-import Window exposing (Window, WindowSizeJs)
 
 
 
@@ -26,13 +26,13 @@ import Window exposing (Window, WindowSizeJs)
 
 
 type alias Flags =
-    { windowSize : WindowSizeJs }
+    { windowSize : GridLayout2.WindowSize }
 
 
 decoder : Json.Decode.Decoder Flags
 decoder =
     Json.Decode.map Flags
-        (Json.Decode.field "windowSize" Window.windowSizeJsDecoder)
+        (Json.Decode.field "windowSize" GridLayout2.windowSizeJsDecoder)
 
 
 
@@ -55,9 +55,28 @@ init flagsResult _ =
             )
 
 
+layoutConfig : LayoutConfig
+layoutConfig =
+    { smallScreen =
+        { minGridWidth = 360
+        , maxGridWidth = Just 720
+        , columnCount = 12
+        , gutter = 16
+        , margin = SameAsGutter
+        }
+    , bigScreen =
+        { minGridWidth = 1024
+        , maxGridWidth = Just 1440
+        , columnCount = 12
+        , gutter = 32
+        , margin = SameAsGutter
+        }
+    }
+
+
 initReady : Flags -> ( Model, Effect Msg )
 initReady flags =
-    ( { window = Window.fromWindowSizeJs flags.windowSize
+    ( { layout = GridLayout2.init layoutConfig flags.windowSize
       }
     , Effect.none
     )
@@ -65,7 +84,7 @@ initReady flags =
 
 meaninglessDefaultModel : Shared.Model.Model
 meaninglessDefaultModel =
-    { window = Window.fromWindowSizeJs Window.initWindowSizeJs
+    { layout = GridLayout2.init layoutConfig { width = 1024, height = 768 }
     }
 
 
@@ -84,9 +103,9 @@ update _ msg model =
             gotNewWindowSize model newWindowSize
 
 
-gotNewWindowSize : Model -> WindowSizeJs -> ( Model, Effect Msg )
+gotNewWindowSize : Model -> GridLayout2.WindowSize -> ( Model, Effect Msg )
 gotNewWindowSize model newWindowSize =
-    ( { model | window = Window.fromWindowSizeJs newWindowSize }, Effect.none )
+    ( { model | layout = GridLayout2.update model.layout newWindowSize }, Effect.none )
 
 
 

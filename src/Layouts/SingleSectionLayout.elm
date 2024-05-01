@@ -1,15 +1,14 @@
-port module Layouts.WebappLayout exposing (Model, Msg, Props, layout)
+port module Layouts.SingleSectionLayout exposing (Model, Msg, Props, layout)
 
 import Color
-import Constants
 import Effect exposing (Effect)
 import Element exposing (..)
 import Element.Background as Background
+import GridLayout2 exposing (ScreenClass(..))
 import Layout exposing (Layout)
 import Route exposing (Route)
 import Shared
 import View exposing (View)
-import Window exposing (..)
 
 
 port urlChanged : () -> Cmd msg
@@ -72,29 +71,20 @@ subscriptions _ =
 view : Shared.Model -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
 view shared { content } =
     { title = content.title
-    , attributes = content.attributes ++ [ width (fill |> minimum Constants.minimalSupportedMobileScreenWidth) ]
+    , attributes = content.attributes ++ GridLayout2.bodyAttributes shared.layout
     , element =
         let
+            outerElementAttrs =
+                []
+
+            innerElementAttrs =
+                [ Background.color Color.gridMarginBackground ]
+
             outerElement =
-                column [ width fill ]
+                column (GridLayout2.layoutOuterAttributes ++ outerElementAttrs)
 
             innerElement =
-                column
-                    ((case shared.window.screenClass of
-                        SmallScreen ->
-                            [ width (fill |> minimum Constants.minimalSupportedMobileScreenWidth)
-                            , padding Constants.gridMarginSmallScreen
-                            , Background.color Color.gridMarginBackground
-                            ]
-
-                        BigScreen ->
-                            [ width (fill |> maximum Constants.contentWithPaddingsMaxWidthBigScreen)
-                            , padding Constants.gridMarginBigScreen
-                            , Background.color Color.gridMarginBackground
-                            ]
-                     )
-                        ++ [ centerX ]
-                    )
+                column (GridLayout2.layoutInnerAttributes shared.layout ++ innerElementAttrs)
         in
         outerElement [ innerElement [ content.element ] ]
     }

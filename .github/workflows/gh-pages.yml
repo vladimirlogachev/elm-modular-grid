@@ -31,20 +31,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.10
+          node-version: 20.12
+
       - name: Set up Elm Land
+        working-directory: example
         run: npm i -g elm elm-land@latest
+
       - name: Build app
+        working-directory: example
         run: elm-land build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
+          path: "example/dist"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

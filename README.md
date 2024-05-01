@@ -14,7 +14,6 @@ npm start
 
 ## How to start using the library, an example based on `elm-land` with `elm-ui`
 
-
 ### Interop.ts
 
 ```ts
@@ -26,7 +25,6 @@ export const flags = ({ env }) => {
     },
   };
 };
-
 ```
 
 ### Shared.Model.elm
@@ -44,7 +42,6 @@ type alias Model =
 type Msg
     = GotNewWindowSize WindowSize
 ```
-
 
 ### Shared.elm
 
@@ -124,7 +121,18 @@ view shared { content } =
 
 ### SomePage.elm
 
-
 ```elm
 -- TODO:
+```
+
+## Package Development
+
+- preview docs
+
+```sh
+git checkuout -b preview/version
+npm run build -- --docs docs.json
+# commit
+# check: TODO:
+# remove docs.json before making PR to main
 ```

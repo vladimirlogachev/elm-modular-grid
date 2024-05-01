@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "elm-land server",
-    "build": "elm-land build",
+    "start": "elm-land generate && vite",
+    "build": "elm-land generate && vite build",
     "typecheck": "npm run build",
     "format-fix-all": "elm-format --yes .",
     "format-validate": "elm-format --validate .",
@@ -21,10 +22,11 @@
     "elm": "^0.19.1-6",
     "elm-format": "^0.8.7",
     "elm-review": "^2.11.1",
-    "elm-land": "^0.20.1"
+    "elm-land": "^0.20.1",
+    "vite": "^5.2.8",
+    "vite-plugin-elm": "^3.0.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "engines": {
     "npm": ">=10.2.3 <11.0.0",
     "node": ">=20.12.0 <21.0.0"

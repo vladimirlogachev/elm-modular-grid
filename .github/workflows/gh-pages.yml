@@ -40,13 +40,13 @@ jobs:
         with:
           node-version: 20.12
 
-      - name: Set up Elm Land
+      - name: Install dependencies
         working-directory: example
-        run: npm i -g elm elm-land@latest
+        run: npm i
 
       - name: Build app
         working-directory: example
-        run: elm-land build
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

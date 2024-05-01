@@ -1,0 +1,39 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "root"
+    }
+  ],
+  "settings": {
+    "[elm]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "elmTooling.elm-ls-vscode"
+    },
+    "elmLS.elmReviewDiagnostics": "warning",
+    "[markdown]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "elmtooling.elm-ls-vscode",
+      "esbenp.prettier-vscode",
+      "shd101wyy.markdown-preview-enhanced",
+      "github.vscode-github-actions"
+    ]
+  }
+}

@@ -26,7 +26,6 @@ layout _ shared _ =
         , view = view shared
         , subscriptions = always Sub.none
         }
-        |> Layout.withOnUrlChanged (always UrlChanged)
 
 
 
@@ -49,14 +48,14 @@ init _ =
 
 
 type Msg
-    = UrlChanged
+    = NoOp
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        UrlChanged ->
-            ( model, Effect.sendCmd <| urlChanged () )
+        NoOp ->
+            ( model, Effect.none )
 
 
 

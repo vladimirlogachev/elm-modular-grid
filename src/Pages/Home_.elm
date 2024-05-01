@@ -82,7 +82,7 @@ view { layout } =
                 [ gridColumn layout { widthSteps = 2 } [] [ none ]
                 , gridColumn layout
                     { widthSteps = 4 }
-                    [ Background.color Color.white, padding layout.grid.gutter ]
+                    [ Background.color Color.white, padding layout.grid.gutter, alignTop ]
                     [ paragraph [ centerX, centerY ]
                         [ text "A column with width of 4 grid steps and an arbitrary height. "
                         , text "A column with width of 4 grid steps and an arbitrary height. "
@@ -94,7 +94,20 @@ view { layout } =
                         , text "A column with width of 4 grid steps and an arbitrary height. "
                         ]
                     ]
-                , gridColumn layout { widthSteps = 6 } [] [ none ]
+                , gridBox
+                    layout
+                    { widthSteps = 2
+                    , heightSteps = 2
+                    }
+                    [ Background.color Color.white ]
+                    [ column [ centerX, centerY ] [ text "2" ] ]
+                , gridBox
+                    layout
+                    { widthSteps = 4
+                    , heightSteps = 4
+                    }
+                    [ Background.color Color.white ]
+                    [ column [ centerX, centerY ] [ text "4" ] ]
                 ]
             ]
     }

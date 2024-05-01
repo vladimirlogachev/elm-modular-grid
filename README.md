@@ -33,7 +33,7 @@ export const flags = ({ env }) => {
 
 ```elm
 type alias Model =
-    { window : GridLayout2.Window
+    { layout : GridLayout2.LayoutState
     }
 
 ```
@@ -42,7 +42,7 @@ type alias Model =
 
 ```elm
 type Msg
-    = GotNewWindowSize WindowSizeJs
+    = GotNewWindowSize WindowSize
 ```
 
 
@@ -50,7 +50,7 @@ type Msg
 
 ```elm
 type alias Flags =
-    { windowSize : GridLayout2.WindowSizeJs }
+    { windowSize : GridLayout2.WindowSize }
 
 
 decoder : Json.Decode.Decoder Flags

@@ -1,0 +1,39 @@
+{
+  "app": {
+    "elm": {
+      "development": { "debugger": false },
+      "production": { "debugger": false }
+    },
+    "env": [],
+    "html": {
+      "attributes": {
+        "html": { "lang": "en" },
+        "head": {}
+      },
+      "title": "elm-modular-grid",
+      "meta": [
+        { "charset": "UTF-8" },
+        { "http-equiv": "X-UA-Compatible", "content": "IE=edge" },
+        {
+          "name": "viewport",
+          "content": "width=device-width, initial-scale=1.0"
+        }
+      ],
+      "link": [
+       
+        {
+          "rel": "icon",
+          "type": "image/svg+xml",
+          "href": "/icons/favicon.svg"
+        },
+        { "rel": "stylesheet", "href": "/styles/reset.css" }
+      ],
+      "script": [
+      ]
+    },
+    "router": {
+      "useHashRouting": true
+    },
+    "proxy": null
+  }
+}

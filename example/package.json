@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "elm-land generate && vite",
-    "build": "elm-land generate && vite build",
+    "build": "elm-land generate && vite build --base=/elm-modular-grid",
     "typecheck": "npm run build",
     "format-fix-all": "elm-format --yes .",
     "format-validate": "elm-format --validate .",

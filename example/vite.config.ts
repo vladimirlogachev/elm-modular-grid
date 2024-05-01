@@ -31,7 +31,7 @@ export default defineConfig(({ command }) => {
     plugins: [elmPlugin(elmSettings)],
     server: { host, port, strictPort: true },
     build: {
-      base: "/elm-modular-grid/",
+      // base: "/elm-modular-grid/",
       rollupOptions: {
         input: {
           // @ts-ignore

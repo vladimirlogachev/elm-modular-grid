@@ -61,14 +61,14 @@ decoder =
 
 layoutConfig : LayoutConfig
 layoutConfig =
-    { smallScreen =
+    { mobileScreen =
         { minGridWidth = 360
         , maxGridWidth = Just 720
         , columnCount = 12
         , gutter = 16
         , margin = SameAsGutter
         }
-    , bigScreen =
+    , desktopScreen =
         { minGridWidth = 1024
         , maxGridWidth = Just 1440
         , columnCount = 12

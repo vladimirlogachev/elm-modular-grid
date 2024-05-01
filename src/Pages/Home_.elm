@@ -40,11 +40,11 @@ view { layout } =
             [ width fill
             , spacing layout.grid.gutter
             , case layout.screenClass of
-                SmallScreen ->
-                    Background.color Color.smallScreenContentBackground
+                MobileScreen ->
+                    Background.color Color.mobileScreenContentBackground
 
-                BigScreen ->
-                    Background.color Color.bigScreenContentBackground
+                DesktopScreen ->
+                    Background.color Color.desktopScreenContentBackground
             ]
             [ column [ width fill, Background.color Color.white, padding layout.grid.gutter ]
                 [ text <| "window.width: " ++ String.fromInt layout.window.width

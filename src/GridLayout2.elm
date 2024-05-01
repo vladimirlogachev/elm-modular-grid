@@ -23,8 +23,8 @@ windowSizeJsDecoder =
 
 
 type ScreenClass
-    = SmallScreen
-    | BigScreen
+    = MobileScreen
+    | DesktopScreen
 
 
 type alias LayoutState =
@@ -41,15 +41,15 @@ type alias LayoutState =
 
 
 type alias LayoutConfig =
-    { smallScreen :
+    { mobileScreen :
         { {- Includes grid margins.
-             The SmallScreen Figma layouts should use this width first.
+             The MobileScreen Figma layouts should use this width first.
              If window width is less than this value, we display horizontal scroll.
           -}
           minGridWidth : Int
 
         {- Includes grid margins.
-           The SmallScreen Figma layouts can use this width for an additional example.
+           The MobileScreen Figma layouts can use this width for an additional example.
            If not set, then the grid will stretch util the next screen breakpoint
         -}
         , maxGridWidth : Maybe Int
@@ -57,15 +57,15 @@ type alias LayoutConfig =
         , gutter : Int
         , margin : GridMargin
         }
-    , bigScreen :
+    , desktopScreen :
         { {- Includes grid margins.
-             The BigScreen Figma layouts should use this width first.
-             If window width is equal or greater than this value, the screen class is BigScreen.
+             The DesktopScreen Figma layouts should use this width first.
+             If window width is equal or greater than this value, the screen class is DesktopScreen.
           -}
           minGridWidth : Int
 
         {- Includes grid margins.
-           The BigScreen Figma layouts can use this width for an additional example.
+           The DesktopScreen Figma layouts can use this width for an additional example.
            If not set, then the grid will stretch indefinitely
         -}
         , maxGridWidth : Maybe Int
@@ -86,55 +86,55 @@ init config window =
     let
         screenClass : ScreenClass
         screenClass =
-            if window.width < config.bigScreen.minGridWidth then
-                SmallScreen
+            if window.width < config.desktopScreen.minGridWidth then
+                MobileScreen
 
             else
-                BigScreen
+                DesktopScreen
     in
     { window = window
     , screenClass = screenClass
     , config = config
     , grid =
         case screenClass of
-            SmallScreen ->
+            MobileScreen ->
                 let
                     gridMargin =
-                        case config.smallScreen.margin of
+                        case config.mobileScreen.margin of
                             SameAsGutter ->
-                                config.smallScreen.gutter
+                                config.mobileScreen.gutter
 
                             GridMargin margin ->
                                 margin
 
                     maxGridWidth =
-                        config.smallScreen.maxGridWidth
+                        config.mobileScreen.maxGridWidth
                             |> Maybe.withDefault window.width
 
                     clampedGridWidth =
-                        clamp config.smallScreen.minGridWidth maxGridWidth window.width
+                        clamp config.mobileScreen.minGridWidth maxGridWidth window.width
 
                     clampedContentWidth =
                         clampedGridWidth - (gridMargin * 2)
                 in
                 { contentWidth = clampedContentWidth
-                , columnCount = config.smallScreen.columnCount
-                , gutter = config.smallScreen.gutter
+                , columnCount = config.mobileScreen.columnCount
+                , gutter = config.mobileScreen.gutter
                 , margin = gridMargin
                 }
 
-            BigScreen ->
+            DesktopScreen ->
                 let
                     gridMargin =
-                        case config.bigScreen.margin of
+                        case config.desktopScreen.margin of
                             SameAsGutter ->
-                                config.bigScreen.gutter
+                                config.desktopScreen.gutter
 
                             GridMargin margin ->
                                 margin
 
                     maxGridWidth =
-                        config.bigScreen.maxGridWidth
+                        config.desktopScreen.maxGridWidth
                             |> Maybe.withDefault window.width
 
                     clampedGridWidth =
@@ -144,8 +144,8 @@ init config window =
                         clampedGridWidth - (gridMargin * 2)
                 in
                 { contentWidth = clampedContentWidth
-                , columnCount = config.bigScreen.columnCount
-                , gutter = config.bigScreen.gutter
+                , columnCount = config.desktopScreen.columnCount
+                , gutter = config.desktopScreen.gutter
                 , margin = gridMargin
                 }
     }
@@ -162,7 +162,7 @@ update { config } window =
 
 bodyAttributes : LayoutState -> List (Attribute msg)
 bodyAttributes layout =
-    [ width (fill |> minimum layout.config.smallScreen.minGridWidth) ]
+    [ width (fill |> minimum layout.config.mobileScreen.minGridWidth) ]
 
 
 layoutOuterAttributes : List (Attribute msg)
@@ -175,12 +175,12 @@ layoutInnerAttributes layout =
     let
         maxWidth =
             case layout.screenClass of
-                SmallScreen ->
-                    layout.config.smallScreen.maxGridWidth
+                MobileScreen ->
+                    layout.config.mobileScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
 
-                BigScreen ->
-                    layout.config.bigScreen.maxGridWidth
+                DesktopScreen ->
+                    layout.config.desktopScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
     in
     [ width (fill |> maximum maxWidth)
@@ -276,11 +276,11 @@ widthOfGridStepsFloat layout numberOfSteps =
     let
         columnCount =
             case layout.screenClass of
-                SmallScreen ->
-                    layout.config.smallScreen.columnCount
+                MobileScreen ->
+                    layout.config.mobileScreen.columnCount
 
-                BigScreen ->
-                    layout.config.bigScreen.columnCount
+                DesktopScreen ->
+                    layout.config.desktopScreen.columnCount
 
         gutterCountBetween =
             numberOfSteps - 1

@@ -17,14 +17,14 @@ white =
     rgb255 255 255 255
 
 
-bigScreenContentBackground : Color
-bigScreenContentBackground =
-    rgb255 0xBB 0xDE 0xFB
-
-
-smallScreenContentBackground : Color
-smallScreenContentBackground =
+mobileScreenContentBackground : Color
+mobileScreenContentBackground =
     rgb255 0xB2 0xEB 0xF2
+
+
+desktopScreenContentBackground : Color
+desktopScreenContentBackground =
+    rgb255 0xBB 0xDE 0xFB
 
 
 bodyBackground : Color

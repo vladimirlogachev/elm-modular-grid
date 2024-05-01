@@ -1,18 +1,12 @@
 # elm-modular-grid
 
-## Pre-requisites
+## How to start using the library in an `elm-land` app with `elm-ui`
+
+### elm.json
 
 ```sh
-npm install
+elm install elm/browser
 ```
-
-## Development
-
-```sh
-npm start
-```
-
-## How to start using the library, an example based on `elm-land` with `elm-ui`
 
 ### Interop.ts
 
@@ -127,12 +121,7 @@ view shared { content } =
 
 ## Package Development
 
-- preview docs
-
-```sh
-git checkuout -b preview/version
-npm run build -- --docs docs.json
-# commit
-# check: TODO:
-# remove docs.json before making PR to main
-```
+- Build and preview docs
+  - `npm run build -- --docs docs.json`
+  - Open https://elm-doc-preview.netlify.app
+  - Open Files -> `README.md` and `docs.json` -> review... -> Close Preview

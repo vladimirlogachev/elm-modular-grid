@@ -5,7 +5,7 @@ module GridLayout2 exposing
     , widthOfGridStepsFloat
     )
 
-{-| test
+{-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
 
 
 # Shared
@@ -38,7 +38,7 @@ import Json.Decode
 -- SHARED
 
 
-{-| TODO:
+{-| A window size object coming from Flags, and cunstructed from the `Browser.Events.onResize` event.
 -}
 type alias WindowSize =
     { width : Int
@@ -46,7 +46,7 @@ type alias WindowSize =
     }
 
 
-{-| TODO:
+{-| A decoder for the `WindowSize` type, for Flags.
 -}
 windowSizeDecoder : Json.Decode.Decoder WindowSize
 windowSizeDecoder =
@@ -55,14 +55,17 @@ windowSizeDecoder =
         (Json.Decode.field "height" Json.Decode.int)
 
 
-{-| TODO:
+{-| A screen class. Similar to `Element.DeviceClass` from `elm-ui`,
+but narrowed down to support only 2 devices both in grid layout and in the application code.
+Names differe from `Element.DeviceClass` to avoid import conflicts
+when importing everything from both `Element` and `GridLayout2`.
 -}
 type ScreenClass
     = MobileScreen
     | DesktopScreen
 
 
-{-| TODO:
+{-| Layout state. A value of this type contains everything needed to render a layout or any grid-aware element.
 -}
 type alias LayoutState =
     { window : WindowSize
@@ -77,7 +80,7 @@ type alias LayoutState =
     }
 
 
-{-| TODO:
+{-| Layout configuration. Needs to be passed in the `init` function once per app.
 -}
 type alias LayoutConfig =
     { mobileScreen :
@@ -115,14 +118,18 @@ type alias LayoutConfig =
     }
 
 
-{-| TODO:
+{-| An option for grid margins.
+
+  - `SameAsGutter` – the minimal modular grid margin will be the same as the gutter.
+  - `GridMargin` – allows to specify the minimal modular grid margin manually.
+
 -}
 type GridMargin
     = SameAsGutter
     | GridMargin Int
 
 
-{-| TODO:
+{-| Initializes the layout state, which then needs to be stored in some sort of `Shared.Model`.
 -}
 init : LayoutConfig -> WindowSize -> LayoutState
 init config window =
@@ -202,7 +209,7 @@ init config window =
     }
 
 
-{-| TODO:
+{-| Updates the layout state. The previous state is passed from the `Shared.Model`.
 -}
 update : LayoutState -> WindowSize -> LayoutState
 update { config } window =
@@ -213,21 +220,21 @@ update { config } window =
 -- LAYOUT
 
 
-{-| TODO:
+{-| A helper to build the application `Layout`. See Readme for example usage.
 -}
 bodyAttributes : LayoutState -> List (Attribute msg)
 bodyAttributes layout =
     [ width (fill |> minimum layout.config.mobileScreen.minGridWidth) ]
 
 
-{-| TODO:
+{-| A helper to build the application `Layout`. See Readme for example usage.
 -}
 layoutOuterAttributes : List (Attribute msg)
 layoutOuterAttributes =
     [ width fill ]
 
 
-{-| TODO:
+{-| A helper to build the application `Layout`. See Readme for example usage.
 -}
 layoutInnerAttributes : LayoutState -> List (Attribute msg)
 layoutInnerAttributes layout =
@@ -253,7 +260,7 @@ layoutInnerAttributes layout =
 -- PAGE
 
 
-{-| TODO:
+{-| A helper to be used in application pages. See Readme for example usage.
 -}
 gridRow :
     LayoutState
@@ -263,7 +270,9 @@ gridRow layout elements =
     row [ width fill, spacing layout.grid.gutter ] elements
 
 
-{-| TODO:
+{-| A helper to be used in application pages.
+Sets container width in terms of modular grid steps, and allows arbitrary height.
+See Readme for example usage.
 -}
 gridColumn :
     LayoutState
@@ -275,7 +284,10 @@ gridColumn layout { widthSteps } attrs elements =
     column (widthOfGridSteps layout widthSteps ++ attrs) elements
 
 
-{-| TODO:
+{-| A helper to be used in application pages.
+Sets both container width and height in terms of modular grid steps,
+which allows the element design to have not only predictable width, but also predictable height.
+See Readme for example usage.
 -}
 gridBox :
     LayoutState
@@ -295,7 +307,7 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
         elements
 
 
-{-| TODO:
+{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't math your needs.
 -}
 widthOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 widthOfGridSteps layout numberOfSteps =
@@ -317,7 +329,7 @@ widthOfGridSteps layout numberOfSteps =
     ]
 
 
-{-| TODO:
+{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't math your needs.
 -}
 heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 heightOfGridSteps layout numberOfSteps =

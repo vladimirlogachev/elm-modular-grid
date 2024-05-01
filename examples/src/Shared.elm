@@ -14,7 +14,7 @@ module Shared exposing
 
 import Browser.Events
 import Effect exposing (Effect)
-import GridLayout2 exposing (..)
+import GridLayout2
 import Json.Decode
 import Route exposing (Route)
 import Shared.Model
@@ -55,21 +55,21 @@ init flagsResult _ =
             )
 
 
-layoutConfig : LayoutConfig
+layoutConfig : GridLayout2.LayoutConfig
 layoutConfig =
     { mobileScreen =
         { minGridWidth = 360
         , maxGridWidth = Just 720
         , columnCount = 12
         , gutter = 16
-        , margin = SameAsGutter
+        , margin = GridLayout2.SameAsGutter
         }
     , desktopScreen =
         { minGridWidth = 1024
         , maxGridWidth = Just 1440
         , columnCount = 12
         , gutter = 32
-        , margin = SameAsGutter
+        , margin = GridLayout2.SameAsGutter
         }
     }
 

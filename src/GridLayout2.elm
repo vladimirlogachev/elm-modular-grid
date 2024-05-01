@@ -1,8 +1,7 @@
 module GridLayout2 exposing
     ( WindowSize, windowSizeDecoder, ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
-    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps
-    , widthOfGridStepsFloat
+    , gridRow, gridColumn, gridBox
     )
 
 {-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
@@ -20,12 +19,10 @@ module GridLayout2 exposing
 
 # Page
 
-@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps
+@docs gridRow, gridColumn, gridBox
 
 
 # Internal
-
-@docs widthOfGridStepsFloat
 
 -}
 
@@ -126,7 +123,6 @@ type alias LayoutConfig =
 -}
 type GridMargin
     = SameAsGutter
-    | GridMargin Int
 
 
 {-| Initializes the layout state, which then needs to be stored in some sort of `Shared.Model`.
@@ -155,9 +151,6 @@ init config window =
                             SameAsGutter ->
                                 config.mobileScreen.gutter
 
-                            GridMargin margin ->
-                                margin
-
                     maxGridWidth : Int
                     maxGridWidth =
                         config.mobileScreen.maxGridWidth
@@ -184,9 +177,6 @@ init config window =
                         case config.desktopScreen.margin of
                             SameAsGutter ->
                                 config.desktopScreen.gutter
-
-                            GridMargin margin ->
-                                margin
 
                     maxGridWidth : Int
                     maxGridWidth =
@@ -348,7 +338,7 @@ heightOfGridSteps layout numberOfSteps =
 -- INTERNAL
 
 
-{-| Implementation detail.
+{-| An implementation detail, but can be used directly in applications without `elm-ui`.
 Returns the width of specified number of grid steps (including gutters), in pixels, Float.
 -}
 widthOfGridStepsFloat : LayoutState -> Int -> Float

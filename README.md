@@ -1,14 +1,18 @@
 # elm-modular-grid
 
-## How to start using the library in an `elm-land` app with `elm-ui`
+Responsive modular grid layouts for Elm.
 
-### elm.json
+Designed for `elm-ui` and `elm-land`, but can be useful with `elm-css` or even pure CSS too.
+
+## Example usage with `elm-land` and `elm-ui`
+
+### `elm.json`
 
 ```sh
 elm install elm/browser
 ```
 
-### Interop.ts
+### `interop.ts`
 
 ```ts
 export const flags = ({ env }) => {
@@ -21,25 +25,31 @@ export const flags = ({ env }) => {
 };
 ```
 
-### Shared.Model.elm
+### `Shared/Model.elm`
 
 ```elm
+import GridLayout2
+
 type alias Model =
     { layout : GridLayout2.LayoutState
     }
 
 ```
 
-### Shared.Msg.elm
+### `Shared/Msg.elm`
 
 ```elm
+import GridLayout2
+
 type Msg
-    = GotNewWindowSize WindowSize
+    = GotNewWindowSize GridLayout2.WindowSize
 ```
 
-### Shared.elm
+### `Shared.elm`
 
 ```elm
+import GridLayout2
+
 type alias Flags =
     { windowSize : GridLayout2.WindowSize }
 
@@ -47,24 +57,24 @@ type alias Flags =
 decoder : Json.Decode.Decoder Flags
 decoder =
     Json.Decode.map Flags
-        (Json.Decode.field "windowSize" GridLayout2.windowSizeJsDecoder)
+        (Json.Decode.field "windowSize" GridLayout2.windowSizeDecoder)
 
 
-layoutConfig : LayoutConfig
+layoutConfig : GridLayout2.LayoutConfig
 layoutConfig =
     { mobileScreen =
         { minGridWidth = 360
         , maxGridWidth = Just 720
         , columnCount = 12
         , gutter = 16
-        , margin = SameAsGutter
+        , margin = GridLayout2.SameAsGutter
         }
     , desktopScreen =
         { minGridWidth = 1024
         , maxGridWidth = Just 1440
         , columnCount = 12
         , gutter = 32
-        , margin = SameAsGutter
+        , margin = GridLayout2.SameAsGutter
         }
     }
 
@@ -72,7 +82,7 @@ init : Result Json.Decode.Error Flags -> Route () -> ( Model, Effect Msg )
 init flagsResult _ =
     case flagsResult of
         Ok flags ->
-            ( { window = GridLayout2.fromWindowSizeJs flags.windowSize } , Effect.none )
+            ( { window = GridLayout2.init layoutConfig flags.windowSize } , Effect.none )
 
         Err _ ->
             Debug.todo ""
@@ -81,43 +91,92 @@ update : Route () -> Msg -> Model -> ( Model, Effect Msg )
 update _ msg model =
     case msg of
         Shared.Msg.GotNewWindowSize newWindowSize ->
-            ( { model | window = GridLayout2.fromWindowSizeJs newWindowSize }, Effect.none )
+            ( { model | window = GridLayout2.update model.layout newWindowSize }, Effect.none )
 
 subscriptions : Route () -> Model -> Sub Msg
 subscriptions route model =
     Browser.Events.onResize (\width height -> Shared.Msg.GotNewWindowSize { width = width, height = height })
 ```
 
-### Layout.SingleSectionLayout.elm
+### `Layouts/SingleSectionLayout.elm`
 
 ```elm
+import GridLayout2
+
 view : Shared.Model -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
 view shared { content } =
     { title = content.title
-    , attributes = content.attributes ++ GridLayout2.bodyAttributes
+    , attributes = content.attributes ++ GridLayout2.bodyAttributes shared.layout
     , element =
         let
+            outerElementAttrs : List (Attribute msg)
             outerElementAttrs =
                 []
 
+            innerElementAttrs : List (Attribute msg)
             innerElementAttrs =
-                []
+                [ Background.color Color.gridMarginBackground ]
 
+            outerElement : List (Element msg) -> Element msg
             outerElement =
                 column (GridLayout2.layoutOuterAttributes ++ outerElementAttrs)
 
+            innerElement : List (Element msg) -> Element msg
             innerElement =
-                column (GridLayout2.layoutInnerAttributes shared.window.screenClass ++ innerElementAttrs)
+                column (GridLayout2.layoutInnerAttributes shared.layout ++ innerElementAttrs)
         in
         outerElement [ innerElement [ content.element ] ]
     }
 ```
 
-### SomePage.elm
+### `Pages/Home_.elm`
 
 ```elm
--- TODO:
+import GridLayout2 exposing (..)
+
+view : Shared.Model -> View msg
+view { layout } =
+    { title = "elm-modular-grid"
+    , attributes = [ Background.color Color.bodyBackground ]
+    , element =
+        column
+            [ width fill
+            , spacing layout.grid.gutter
+            , case layout.screenClass of
+                MobileScreen ->
+                    Background.color Color.mobileScreenContentBackground
+
+                DesktopScreen ->
+                    Background.color Color.desktopScreenContentBackground
+            ]
+            [ gridRow layout
+                [ gridColumn layout
+                    { widthSteps = 4 }
+                    [ Background.color Color.white, padding layout.grid.gutter, alignTop ]
+                    [ paragraph [] [ text "A column with width of 4 grid steps and an arbitrary height. " ]
+                    ]
+                , gridBox
+                    layout
+                    { widthSteps = 2
+                    , heightSteps = 4
+                    }
+                    [ Background.color Color.white, padding layout.grid.gutter ]
+                    [ paragraph [] [ text "A box with width of 2 modular grid steps and height of 4 steps, including gutters" ] ]
+                , gridBox
+                    layout
+                    { widthSteps = 6
+                    , heightSteps = 3
+                    }
+                    [ Background.color Color.white ]
+                    [ column [ centerX, centerY ] [ text "6 x 3 steps" ] ]
+                ]
+            ]
+    }
 ```
+
+### Result
+
+![Image](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/example-usage-result.jpg?raw=true)
 
 ## Package Development
 

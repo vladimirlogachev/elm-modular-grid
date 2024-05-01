@@ -46,78 +46,26 @@ view { layout } =
                 DesktopScreen ->
                     Background.color Color.desktopScreenContentBackground
             ]
-            [ column [ width fill, Background.color Color.white, padding layout.grid.gutter ]
-                [ text <| "window.width: " ++ String.fromInt layout.window.width
-                , text <| "grid.contentWidth: " ++ String.fromInt layout.grid.contentWidth
-                , text <| "grid.columnCount: " ++ String.fromInt layout.grid.columnCount
-                , text <| "grid.gutter: " ++ String.fromInt layout.grid.gutter
-                , text <| "grid.margin: " ++ String.fromInt layout.grid.margin
-                ]
-            , gridRow layout
-                [ viewBox layout { widthSteps = 11, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                ]
-            , gridRow layout
-                [ viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 1, heightSteps = 1 }
-                ]
-            , gridRow layout
-                [ viewBox layout { widthSteps = 1, heightSteps = 1 }
-                , viewBox layout { widthSteps = 11, heightSteps = 1 }
-                ]
-            , gridRow layout
-                [ viewBox layout { widthSteps = 1, heightSteps = 1 }
-                ]
-            , gridRow layout
-                [ gridColumn layout { widthSteps = 2 } [] [ none ]
-                , gridColumn layout
+            [ gridRow layout
+                [ gridColumn layout
                     { widthSteps = 4 }
                     [ Background.color Color.white, padding layout.grid.gutter, alignTop ]
-                    [ paragraph [ centerX, centerY ]
-                        [ text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        , text "A column with width of 4 grid steps and an arbitrary height. "
-                        ]
+                    [ paragraph [] [ text "A column with width of 4 grid steps and an arbitrary height. " ]
                     ]
                 , gridBox
                     layout
                     { widthSteps = 2
-                    , heightSteps = 2
-                    }
-                    [ Background.color Color.white ]
-                    [ column [ centerX, centerY ] [ text "2" ] ]
-                , gridBox
-                    layout
-                    { widthSteps = 4
                     , heightSteps = 4
                     }
+                    [ Background.color Color.white, padding layout.grid.gutter ]
+                    [ paragraph [] [ text "A box with width of 2 modular grid steps and height of 4 steps, including gutters" ] ]
+                , gridBox
+                    layout
+                    { widthSteps = 6
+                    , heightSteps = 3
+                    }
                     [ Background.color Color.white ]
-                    [ column [ centerX, centerY ] [ text "4" ] ]
+                    [ column [ centerX, centerY ] [ text "6 x 3 steps" ] ]
                 ]
             ]
     }
-
-
-viewBox : LayoutState -> { widthSteps : Int, heightSteps : Int } -> Element msg
-viewBox layout { widthSteps, heightSteps } =
-    gridBox layout
-        { widthSteps = widthSteps
-        , heightSteps = heightSteps
-        }
-        [ Background.color Color.white ]
-        [ column [ centerX, centerY ] [ text <| String.fromInt widthSteps ++ "x" ++ String.fromInt heightSteps ] ]

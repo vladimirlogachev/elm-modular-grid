@@ -6,7 +6,7 @@ Designed for `elm-ui` and `elm-land`, but can be useful with `elm-css` or even p
 
 ## What is a modular grid?
 
-A modular grid is a well-known pattern in design which helps to establish a visual rhythm and produce layouts designs quickly and in a controlled way. A simple explanation is given [Design Trampoline. Module 5: Grid](https://designtrampoline.org/module/grid/grid/), and more info can be found on the web.
+A modular grid is a well-known design approach which helps to establish a visual rhythm and produce layouts designs quickly and in a controlled way. A simple explanation is given [Design Trampoline. Module 5: Grid](https://designtrampoline.org/module/grid/grid/), and more info can be found on the web.
 
 In the code, we refer to the following elements of grid:
 

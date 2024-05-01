@@ -95,6 +95,8 @@ type alias LayoutState =
     The DesktopScreen Figma layouts can use this width for an additional example.
     If not set, then the grid will stretch indefinitely.
   - `columnCount` – The number of columns in the grid.
+  - `gutter` – The width of the gutter between columns, in pixels.
+  - `margin` – The minimal modular grid margin. Can be `SameAsGutter` or `GridMargin` with specific value, in pixels.
 
 -}
 type alias LayoutConfig =

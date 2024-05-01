@@ -4,7 +4,7 @@ import Color
 import Effect exposing (Effect)
 import Element exposing (..)
 import Element.Background as Background
-import GridLayout2 exposing (ScreenClass(..))
+import GridLayout2
 import Layout exposing (Layout)
 import Route exposing (Route)
 import Shared
@@ -24,9 +24,9 @@ layout _ shared _ =
         { init = init
         , update = update
         , view = view shared
-        , subscriptions = subscriptions
+        , subscriptions = always Sub.none
         }
-        |> Layout.withOnUrlChanged UrlChanged
+        |> Layout.withOnUrlChanged (always UrlChanged)
 
 
 
@@ -49,19 +49,14 @@ init _ =
 
 
 type Msg
-    = UrlChanged { from : Route (), to : Route () }
+    = UrlChanged
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
 update msg model =
     case msg of
-        UrlChanged _ ->
+        UrlChanged ->
             ( model, Effect.sendCmd <| urlChanged () )
-
-
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
 
 
 
@@ -74,15 +69,19 @@ view shared { content } =
     , attributes = content.attributes ++ GridLayout2.bodyAttributes shared.layout
     , element =
         let
+            outerElementAttrs : List (Attribute msg)
             outerElementAttrs =
                 []
 
+            innerElementAttrs : List (Attribute msg)
             innerElementAttrs =
                 [ Background.color Color.gridMarginBackground ]
 
+            outerElement : List (Element msg) -> Element msg
             outerElement =
                 column (GridLayout2.layoutOuterAttributes ++ outerElementAttrs)
 
+            innerElement : List (Element msg) -> Element msg
             innerElement =
                 column (GridLayout2.layoutInnerAttributes shared.layout ++ innerElementAttrs)
         in

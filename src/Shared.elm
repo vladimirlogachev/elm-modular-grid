@@ -113,5 +113,5 @@ gotNewWindowSize model newWindowSize =
 
 
 subscriptions : Route () -> Model -> Sub Msg
-subscriptions route model =
+subscriptions _ _ =
     Browser.Events.onResize (\width height -> Shared.Msg.GotNewWindowSize { width = width, height = height })

@@ -1,15 +1,10 @@
-module Color exposing (..)
+module Color exposing (bodyBackground, desktopScreenContentBackground, gridMarginBackground, mobileScreenContentBackground, white)
 
 import Element exposing (..)
 
 
 
 -- Colors to be used directly
-
-
-black : Color
-black =
-    rgb255 0x1A 0x1A 0x1A
 
 
 white : Color

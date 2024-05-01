@@ -1,4 +1,22 @@
-module GridLayout2 exposing (..)
+module GridLayout2 exposing
+    ( GridMargin(..)
+    , LayoutConfig
+    , LayoutState
+    , ScreenClass(..)
+    , WindowSize
+    , bodyAttributes
+    , gridBox
+    , gridColumn
+    , gridRow
+    , heightOfGridSteps
+    , init
+    , layoutInnerAttributes
+    , layoutOuterAttributes
+    , update
+    , widthOfGridSteps
+    , widthOfGridStepsFloat
+    , windowSizeJsDecoder
+    )
 
 import Element exposing (..)
 import Html.Attributes
@@ -99,6 +117,7 @@ init config window =
         case screenClass of
             MobileScreen ->
                 let
+                    gridMargin : Int
                     gridMargin =
                         case config.mobileScreen.margin of
                             SameAsGutter ->
@@ -107,13 +126,16 @@ init config window =
                             GridMargin margin ->
                                 margin
 
+                    maxGridWidth : Int
                     maxGridWidth =
                         config.mobileScreen.maxGridWidth
                             |> Maybe.withDefault window.width
 
+                    clampedGridWidth : Int
                     clampedGridWidth =
                         clamp config.mobileScreen.minGridWidth maxGridWidth window.width
 
+                    clampedContentWidth : Int
                     clampedContentWidth =
                         clampedGridWidth - (gridMargin * 2)
                 in
@@ -125,6 +147,7 @@ init config window =
 
             DesktopScreen ->
                 let
+                    gridMargin : Int
                     gridMargin =
                         case config.desktopScreen.margin of
                             SameAsGutter ->
@@ -133,13 +156,16 @@ init config window =
                             GridMargin margin ->
                                 margin
 
+                    maxGridWidth : Int
                     maxGridWidth =
                         config.desktopScreen.maxGridWidth
                             |> Maybe.withDefault window.width
 
+                    clampedGridWidth : Int
                     clampedGridWidth =
                         min maxGridWidth window.width
 
+                    clampedContentWidth : Int
                     clampedContentWidth =
                         clampedGridWidth - (gridMargin * 2)
                 in
@@ -173,6 +199,7 @@ layoutOuterAttributes =
 layoutInnerAttributes : LayoutState -> List (Attribute msg)
 layoutInnerAttributes layout =
     let
+        maxWidth : Int
         maxWidth =
             case layout.screenClass of
                 MobileScreen ->
@@ -234,6 +261,7 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
 widthOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 widthOfGridSteps layout numberOfSteps =
     let
+        baseWidth : Float
         baseWidth =
             widthOfGridStepsFloat layout numberOfSteps
     in
@@ -255,6 +283,7 @@ widthOfGridSteps layout numberOfSteps =
 heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 heightOfGridSteps layout numberOfSteps =
     let
+        baseHeight : Float
         baseHeight =
             widthOfGridStepsFloat layout numberOfSteps
     in
@@ -274,6 +303,7 @@ Returns the width of specified number of grid steps (including gutters), in pixe
 widthOfGridStepsFloat : LayoutState -> Int -> Float
 widthOfGridStepsFloat layout numberOfSteps =
     let
+        columnCount : Int
         columnCount =
             case layout.screenClass of
                 MobileScreen ->
@@ -282,12 +312,15 @@ widthOfGridStepsFloat layout numberOfSteps =
                 DesktopScreen ->
                     layout.config.desktopScreen.columnCount
 
+        gutterCountBetween : Int
         gutterCountBetween =
             numberOfSteps - 1
 
+        gutterWidth : Int
         gutterWidth =
             layout.grid.gutter
 
+        stepWidth : Float
         stepWidth =
             (toFloat layout.grid.contentWidth - toFloat gutterWidth * (toFloat columnCount - 1))
                 / toFloat columnCount

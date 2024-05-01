@@ -33,7 +33,7 @@ import NoUnused.Parameters
 import NoUnused.Patterns
 import NoUnused.Variables
 import NoUselessSubscriptions
-import Review.Rule exposing (Rule)
+import Review.Rule as Rule exposing (Rule)
 import Simplify
 
 
@@ -48,19 +48,20 @@ config =
     , NoMissingSubscriptionsCall.rule
     , NoRecursiveUpdate.rule
     , NoUselessSubscriptions.rule
-    , NoUnsafeDivision.rule
-    , NoUnused.CustomTypeConstructors.rule []
-    , NoUnused.CustomTypeConstructorArgs.rule
+    , NoUnsafeDivision.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
+    , NoUnused.CustomTypeConstructors.rule [] |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
+    , NoUnused.CustomTypeConstructorArgs.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
     , NoUnused.Dependencies.rule
-    , NoUnused.Exports.rule
+    , NoUnused.Exports.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
     , NoUnused.Modules.rule
     , NoUnused.Parameters.rule
     , NoUnused.Patterns.rule
     , NoExposingEverything.rule
     , NoUnused.Variables.rule
-    , NoImportingEverything.rule [ "Element", "Html" ]
+    , NoImportingEverything.rule [ "Element", "GridLayout2" ]
     , NoMissingTypeAnnotation.rule
     , NoMissingTypeAnnotationInLetIn.rule
     , NoPrematureLetComputation.rule
     , NoSimpleLetBody.rule
     ]
+        |> List.map (Rule.ignoreErrorsForDirectories [ ".elm-land/" ])

@@ -122,10 +122,9 @@ view shared { content } =
     }
 ```
 
-## Roadmap (may appear in future versions)
+### SomePage.elm
 
-- Module for 3 screens
-- multi-section layouts
-- non-elm-ui version (still makes sense for elm-css, but probably doesn't make sense for tailwind)
-  - but tailwind doesn't do anything about the height of the elements
 
+```elm
+-- TODO:
+```

@@ -4,8 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "elm-land server",
-    "build": "elm-land build",
+    "build": "elm make",
     "typecheck": "npm run build",
     "format-fix-all": "elm-format --yes .",
     "format-validate": "elm-format --validate .",
@@ -20,8 +19,7 @@
   "devDependencies": {
     "elm": "^0.19.1-6",
     "elm-format": "^0.8.7",
-    "elm-review": "^2.11.1",
-    "elm-land": "^0.20.1"
+    "elm-review": "^2.11.1"
   },
   "dependencies": {
   },

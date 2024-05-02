@@ -1,4 +1,4 @@
-module TextStyle exposing (..)
+module TextStyle exposing (body, headerDesktop, headerMobile, subheaderDesktop, subheaderMobile)
 
 import Element exposing (..)
 import Element.Font as Font

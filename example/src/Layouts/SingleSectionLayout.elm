@@ -1,18 +1,13 @@
-port module Layouts.SingleSectionLayout exposing (Model, Msg, Props, layout)
+module Layouts.SingleSectionLayout exposing (Model, Msg, Props, layout)
 
-import Color
 import Effect exposing (Effect)
 import Element exposing (..)
-import Element.Background as Background
 import GridLayout2
 import Layout exposing (Layout)
 import Route exposing (Route)
 import Shared
 import TextStyle
 import View exposing (View)
-
-
-port urlChanged : () -> Cmd msg
 
 
 type alias Props =
@@ -48,15 +43,13 @@ init _ =
 -- UPDATE
 
 
-type Msg
-    = NoOp
+type alias Msg =
+    ()
 
 
 update : Msg -> Model -> ( Model, Effect Msg )
-update msg model =
-    case msg of
-        NoOp ->
-            ( model, Effect.none )
+update _ model =
+    ( model, Effect.none )
 
 
 

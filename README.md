@@ -10,9 +10,9 @@ Designed for `elm-ui` and `elm-land`, but can be useful with `elm-css` or even p
 
 ## What is a modular grid?
 
-A modular grid is a well-known design approach which helps to establish a visual rhythm and produce layouts designs quickly and in a controlled way. A simple explanation is given [Design Trampoline. Module 5: Grid](https://designtrampoline.org/module/grid/grid/), and more info can be found on the web.
+A modular grid is a well-known design approach that helps to establish a visual rhythm and produce layout designs quickly and in a controlled way. A simple explanation is given [Design Trampoline. Module 5: Grid](https://designtrampoline.org/module/grid/grid/), and more info can be found on the web.
 
-In the code, we refer to the following elements of grid:
+In the code, we refer to the following elements of the grid:
 
 ![Grid elements](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/grid-elements.svg?raw=true)
 
@@ -222,7 +222,7 @@ viewDesktop layout =
 
 ## Switching between versions
 
-Here's how you can switch from 2-screen to 3-screen (or 1-screen) version:
+Here's how you can switch from a 2-screen to a 3-screen (or 1-screen) version:
 
 - replace `GridLayout2` with `GridLayout3` everywhere in your code
 - update `layoutConfig`

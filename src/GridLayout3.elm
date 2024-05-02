@@ -32,7 +32,7 @@ import Json.Decode
 -- SHARED
 
 
-{-| A window size object coming from Flags, and cunstructed from the `Browser.Events.onResize` event.
+{-| A window size object coming from Flags and constructed from the `Browser.Events.onResize` event.
 -}
 type alias WindowSize =
     { width : Int
@@ -51,7 +51,7 @@ windowSizeDecoder =
 
 {-| A screen class. Similar to `Element.DeviceClass` from `elm-ui`,
 but narrowed down to support only 3 devices both in grid layout and in the application code.
-Names differe from `Element.DeviceClass` to avoid import conflicts
+Names differ from `Element.DeviceClass` to avoid import conflicts
 when importing everything from both `Element` and `GridLayout3`.
 -}
 type ScreenClass
@@ -85,19 +85,19 @@ type alias LayoutState =
 
   - `mobileScreen.minGridWidth` – Includes grid margins.
     The MobileScreen Figma layouts should use this width first.
-    If window width is less than this value, we display horizontal scroll.
+    If the window width is less than this value, we display a horizontal scroll.
   - `mobileScreen.maxGridWidth` – Includes grid margins.
-    The MobileScreen Figma layouts can use this width for an additional example.
-    If not set, then the grid will stretch util the next screen breakpoint.
+    The MobileScreen Figma layouts can use this width as an additional example.
+    If not set, then the grid will stretch until the next screen breakpoint.
   - `desktopScreen.minGridWidth` – Includes grid margins.
     The DesktopScreen Figma layouts should use this width first.
-    If window width is equal or greater than this value, the screen class is DesktopScreen.
+    If the window width is equal to or greater than this value, the screen class is DesktopScreen.
   - `desktopScreen.maxGridWidth` – Includes grid margins.
-    The DesktopScreen Figma layouts can use this width for an additional example.
+    The DesktopScreen Figma layouts can use this width as an additional example.
     If not set, then the grid will stretch indefinitely.
   - `columnCount` – The number of columns in the grid.
   - `gutter` – The width of the gutter between columns, in pixels.
-  - `margin` – The minimal modular grid margin. Can be `SameAsGutter` or `GridMargin` with specific value, in pixels.
+  - `margin` – The minimal modular grid margin. Can be `SameAsGutter` or `GridMargin` with a specific value, in pixels.
 
 -}
 type alias LayoutConfig =
@@ -330,7 +330,7 @@ gridColumn layout { widthSteps } attrs elements =
 
 {-| A helper to be used in application pages.
 Sets both container width and height in terms of modular grid steps,
-which allows the element design to have not only predictable width, but also predictable height.
+which allows the element design to have not only predictable width but also predictable height.
 See Readme for example usage.
 -}
 gridBox :
@@ -351,7 +351,7 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
         elements
 
 
-{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't math your needs.
+{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't match your needs.
 -}
 widthOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 widthOfGridSteps layout numberOfSteps =
@@ -373,7 +373,7 @@ widthOfGridSteps layout numberOfSteps =
     ]
 
 
-{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't math your needs.
+{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't match your needs.
 -}
 heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 heightOfGridSteps layout numberOfSteps =
@@ -389,7 +389,7 @@ heightOfGridSteps layout numberOfSteps =
 
 
 {-| An implementation detail, but can be used directly in applications without `elm-ui`.
-Returns the width of specified number of grid steps (including gutters), in pixels, Float.
+Returns the width of a specified number of grid steps (including gutters), in pixels, Float.
 -}
 widthOfGridStepsFloat : LayoutState -> Int -> Float
 widthOfGridStepsFloat layout numberOfSteps =
@@ -406,7 +406,7 @@ widthOfGridStepsFloat layout numberOfSteps =
     (stepWidth * toFloat numberOfSteps) + (toFloat layout.grid.gutter * toFloat gutterCountBetween)
 
 
-{-| A to scale an element to specified width of steps, maintaining the original proportions (e.g. of an image which you want never to be cropped).
+{-| A to scale an element to a specified width of steps, maintaining the original proportions (e.g. of an image which you want never to be cropped).
 -}
 scaleProportionallyToWidthOfGridSteps :
     LayoutState
@@ -429,8 +429,8 @@ scaleProportionallyToWidthOfGridSteps layout params =
            ]
 
 
-{-| An implementation detail, but can be used directly in applications without `elm-ui`.
-Returns the width and height of block scaled to width of specified number of grid steps (including gutters), in pixels, Float.
+{-| An implementation detail, but can be used directly in applications without elm-ui.
+Returns the width and height of the block scaled to the width of a specified number of grid steps (including gutters), in pixels, Float.
 -}
 scaleProportionallyToWidthOfGridStepsFloat :
     LayoutState
@@ -455,7 +455,7 @@ scaleProportionallyToWidthOfGridStepsFloat layout { originalWidth, originalHeigh
 -- IMPLEMENTATION DETAILS
 
 
-{-| A config is not meant to be accessed from the client code, so it's wrapped in this type to prevent direct access.
+{-| `LayoutConfig` is not meant to be accessed from the client code, so it's wrapped in this type to prevent direct access.
 -}
 type WrappedConfig
     = WrappedConfig LayoutConfig

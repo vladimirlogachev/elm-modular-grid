@@ -1,5 +1,5 @@
 module GridLayout3 exposing
-    ( ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
+    ( ScreenClass(..), LayoutState, LayoutConfig, WrappedConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
     , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
     )
@@ -9,7 +9,7 @@ module GridLayout3 exposing
 
 # Shared
 
-@docs ScreenClass, LayoutState, LayoutConfig, GridMargin, WindowSize, windowSizeDecoder, init, update
+@docs ScreenClass, LayoutState, LayoutConfig, WrappedConfig, GridMargin, WindowSize, windowSizeDecoder, init, update
 
 
 # Layout
@@ -71,7 +71,7 @@ type ScreenClass
 type alias LayoutState =
     { window : WindowSize
     , screenClass : ScreenClass
-    , config : LayoutConfig
+    , config : WrappedConfig
     , grid :
         { contentWidth : Int
         , columnCount : Int
@@ -154,7 +154,7 @@ init config window =
     in
     { window = window
     , screenClass = screenClass
-    , config = config
+    , config = WrappedConfig config
     , grid =
         case screenClass of
             MobileScreen ->
@@ -253,7 +253,7 @@ init config window =
 -}
 update : LayoutState -> WindowSize -> LayoutState
 update { config } window =
-    init config window
+    init (accessConfig config) window
 
 
 
@@ -264,7 +264,7 @@ update { config } window =
 -}
 bodyAttributes : LayoutState -> List (Attribute msg)
 bodyAttributes layout =
-    [ width (fill |> minimum layout.config.mobileScreen.minGridWidth) ]
+    [ width (fill |> minimum (accessConfig layout.config).mobileScreen.minGridWidth) ]
 
 
 {-| A helper to build the application `Layout`. See Readme for example usage.
@@ -283,15 +283,15 @@ layoutInnerAttributes layout =
         maxWidth =
             case layout.screenClass of
                 MobileScreen ->
-                    layout.config.mobileScreen.maxGridWidth
+                    (accessConfig layout.config).mobileScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
 
                 TabletScreen ->
-                    layout.config.tabletScreen.maxGridWidth
+                    (accessConfig layout.config).tabletScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
 
                 DesktopScreen ->
-                    layout.config.desktopScreen.maxGridWidth
+                    (accessConfig layout.config).desktopScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
     in
     [ width (fill |> maximum maxWidth)
@@ -394,32 +394,16 @@ Returns the width of specified number of grid steps (including gutters), in pixe
 widthOfGridStepsFloat : LayoutState -> Int -> Float
 widthOfGridStepsFloat layout numberOfSteps =
     let
-        columnCount : Int
-        columnCount =
-            case layout.screenClass of
-                MobileScreen ->
-                    layout.config.mobileScreen.columnCount
-
-                TabletScreen ->
-                    layout.config.tabletScreen.columnCount
-
-                DesktopScreen ->
-                    layout.config.desktopScreen.columnCount
-
         gutterCountBetween : Int
         gutterCountBetween =
             numberOfSteps - 1
 
-        gutterWidth : Int
-        gutterWidth =
-            layout.grid.gutter
-
         stepWidth : Float
         stepWidth =
-            (toFloat layout.grid.contentWidth - toFloat gutterWidth * (toFloat columnCount - 1))
-                / toFloat columnCount
+            (toFloat layout.grid.contentWidth - toFloat layout.grid.gutter * (toFloat layout.grid.columnCount - 1))
+                / toFloat layout.grid.columnCount
     in
-    (stepWidth * toFloat numberOfSteps) + (toFloat gutterWidth * toFloat gutterCountBetween)
+    (stepWidth * toFloat numberOfSteps) + (toFloat layout.grid.gutter * toFloat gutterCountBetween)
 
 
 {-| A to scale an element to specified width of steps, maintaining the original proportions (e.g. of an image which you want never to be cropped).
@@ -465,3 +449,20 @@ scaleProportionallyToWidthOfGridStepsFloat layout { originalWidth, originalHeigh
     { width = widthFloat
     , height = widthFloat * (toFloat originalHeight / toFloat originalWidth)
     }
+
+
+
+-- IMPLEMENTATION DETAILS
+
+
+{-| A config is not meant to be accessed from the client code, so it's wrapped in this type to prevent direct access.
+-}
+type WrappedConfig
+    = WrappedConfig LayoutConfig
+
+
+{-| A helper to access the wrapped config.
+-}
+accessConfig : WrappedConfig -> LayoutConfig
+accessConfig (WrappedConfig config) =
+    config

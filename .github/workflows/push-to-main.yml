@@ -1,5 +1,5 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+
+name: Push to main (check, build, deploy example app)
 
 on:
   # Runs on pushes targeting the default branch
@@ -41,12 +41,18 @@ jobs:
           node-version: 20.12
 
       - name: Install dependencies
-        working-directory: example
-        run: npm i
+        run: |
+          set -eu
+          npm i
+          cd example
+          npm i
 
-      - name: Build app
-        working-directory: example
-        run: npm run build
+      - name: Check
+        run: |
+          set -eu
+          npm check
+          cd example
+          npm check
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

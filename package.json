@@ -6,8 +6,8 @@
   "scripts": {
     "build": "elm make",
     "typecheck": "npm run build",
-    "format-fix-all": "elm-format --yes .",
-    "format-validate": "elm-format --validate .",
+    "format-fix-all": "elm-format --yes src/ review/",
+    "format-validate": "elm-format --validate src/ review/",
     "review": "elm-review",
     "review-fix-interactive": "elm-review --fix",
     "review-fix-all": "yes | elm-review --fix-all",
@@ -21,8 +21,7 @@
     "elm-format": "^0.8.7",
     "elm-review": "^2.11.1"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "engines": {
     "npm": ">=10.2.3 <11.0.0",
     "node": ">=20.12.0 <21.0.0"

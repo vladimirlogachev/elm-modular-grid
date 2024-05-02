@@ -1,5 +1,5 @@
 
-name: Push to main (check, build, deploy example app)
+name: Push to main (check, build, deploy example app, publish elm package if version was bumped)
 
 on:
   # Runs on pushes targeting the default branch
@@ -43,9 +43,9 @@ jobs:
       - name: Install dependencies
         run: |
           set -eu
-          npm i
+          npm ci
           cd example
-          npm i
+          npm ci
 
       - name: Check
         run: |

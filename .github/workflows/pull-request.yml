@@ -32,9 +32,9 @@ jobs:
       - name: Install dependencies
         run: |
           set -eu
-          npm i
+          npm ci
           cd example
-          npm i
+          npm ci
 
       - name: Check
         run: |

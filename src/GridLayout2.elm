@@ -125,6 +125,7 @@ type alias LayoutConfig =
 -}
 type GridMargin
     = SameAsGutter
+    | GridMargin Int
 
 
 {-| Initializes the layout state, which then needs to be stored in some sort of `Shared.Model`.
@@ -153,6 +154,9 @@ init config window =
                             SameAsGutter ->
                                 config.mobileScreen.gutter
 
+                            GridMargin margin ->
+                                margin
+
                     maxGridWidth : Int
                     maxGridWidth =
                         config.mobileScreen.maxGridWidth
@@ -179,6 +183,9 @@ init config window =
                         case config.desktopScreen.margin of
                             SameAsGutter ->
                                 config.desktopScreen.gutter
+
+                            GridMargin margin ->
+                                margin
 
                     maxGridWidth : Int
                     maxGridWidth =

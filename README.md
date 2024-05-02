@@ -23,7 +23,7 @@ The full potential of modular grid design will be realized if the layouts are de
 - Responsive grid columns (step width is variable, columns can grow, but gutter and minimal margin are fixed).
 - Allows to establish a vertical rhythm using column width, and maintain proportions of the grid elements on different screen sizes.
 
-## Example usage with `elm-land` and `elm-ui`
+## Example usage of `GridLayout2` (2-screen version) with `elm-land` and `elm-ui`
 
 ### `elm.json`
 
@@ -219,3 +219,11 @@ viewDesktop layout =
 ```
 
 [Complete example code](https://github.com/vladimirlogachev/elm-modular-grid/tree/main/example).
+
+## Switching between versions
+
+Here's how you can switch from 2-screen to 3-screen (or 1-screen) version:
+
+- replace `GridLayout2` with `GridLayout3` everywhere in your code
+- update `layoutConfig`
+- follow compiler errors to adjust pattern matching of `ScreenClass`.

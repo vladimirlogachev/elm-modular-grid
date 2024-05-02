@@ -1,10 +1,10 @@
-module GridLayout2 exposing
+module GridLayout1 exposing
     ( ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
     , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
     )
 
-{-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
+{-| `GridLayout1` stands for 1 screen class: Mobile
 
 
 # Shared
@@ -50,13 +50,12 @@ windowSizeDecoder =
 
 
 {-| A screen class. Similar to `Element.DeviceClass` from `elm-ui`,
-but narrowed down to support only 2 devices both in grid layout and in the application code.
+but narrowed down to support only 1 device both in grid layout and in the application code.
 Names differe from `Element.DeviceClass` to avoid import conflicts
-when importing everything from both `Element` and `GridLayout2`.
+when importing everything from both `Element` and `GridLayout1`.
 -}
 type ScreenClass
     = MobileScreen
-    | DesktopScreen
 
 
 {-| Layout state. A value of this type contains everything needed to render a layout or any grid-aware element.
@@ -87,12 +86,6 @@ type alias LayoutState =
     If window width is less than this value, we display horizontal scroll.
   - `mobileScreen.maxGridWidth` – Includes grid margins.
     The MobileScreen Figma layouts can use this width for an additional example.
-    If not set, then the grid will stretch util the next screen breakpoint.
-  - `desktopScreen.minGridWidth` – Includes grid margins.
-    The DesktopScreen Figma layouts should use this width first.
-    If window width is equal or greater than this value, the screen class is DesktopScreen.
-  - `desktopScreen.maxGridWidth` – Includes grid margins.
-    The DesktopScreen Figma layouts can use this width for an additional example.
     If not set, then the grid will stretch indefinitely.
   - `columnCount` – The number of columns in the grid.
   - `gutter` – The width of the gutter between columns, in pixels.
@@ -101,13 +94,6 @@ type alias LayoutState =
 -}
 type alias LayoutConfig =
     { mobileScreen :
-        { minGridWidth : Int
-        , maxGridWidth : Maybe Int
-        , columnCount : Int
-        , gutter : Int
-        , margin : GridMargin
-        }
-    , desktopScreen :
         { minGridWidth : Int
         , maxGridWidth : Maybe Int
         , columnCount : Int
@@ -135,11 +121,7 @@ init config window =
     let
         screenClass : ScreenClass
         screenClass =
-            if window.width < config.desktopScreen.minGridWidth then
-                MobileScreen
-
-            else
-                DesktopScreen
+            MobileScreen
     in
     { window = window
     , screenClass = screenClass
@@ -173,36 +155,6 @@ init config window =
                 { contentWidth = clampedContentWidth
                 , columnCount = config.mobileScreen.columnCount
                 , gutter = config.mobileScreen.gutter
-                , margin = gridMargin
-                }
-
-            DesktopScreen ->
-                let
-                    gridMargin : Int
-                    gridMargin =
-                        case config.desktopScreen.margin of
-                            SameAsGutter ->
-                                config.desktopScreen.gutter
-
-                            GridMargin margin ->
-                                margin
-
-                    maxGridWidth : Int
-                    maxGridWidth =
-                        config.desktopScreen.maxGridWidth
-                            |> Maybe.withDefault window.width
-
-                    clampedGridWidth : Int
-                    clampedGridWidth =
-                        min maxGridWidth window.width
-
-                    clampedContentWidth : Int
-                    clampedContentWidth =
-                        clampedGridWidth - (gridMargin * 2)
-                in
-                { contentWidth = clampedContentWidth
-                , columnCount = config.desktopScreen.columnCount
-                , gutter = config.desktopScreen.gutter
                 , margin = gridMargin
                 }
     }
@@ -243,10 +195,6 @@ layoutInnerAttributes layout =
             case layout.screenClass of
                 MobileScreen ->
                     layout.config.mobileScreen.maxGridWidth
-                        |> Maybe.withDefault layout.window.width
-
-                DesktopScreen ->
-                    layout.config.desktopScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
     in
     [ width (fill |> maximum maxWidth)
@@ -354,9 +302,6 @@ widthOfGridStepsFloat layout numberOfSteps =
             case layout.screenClass of
                 MobileScreen ->
                     layout.config.mobileScreen.columnCount
-
-                DesktopScreen ->
-                    layout.config.desktopScreen.columnCount
 
         gutterCountBetween : Int
         gutterCountBetween =

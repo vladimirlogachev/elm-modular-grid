@@ -4,7 +4,7 @@ module GridLayout3 exposing
     , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
     )
 
-{-| `GridLayout3` stands for 3 screen classes: Mobile and Desktop.
+{-| `GridLayout3` stands for 3 screen classes: Mobile, Tablet, and Desktop.
 
 
 # Shared
@@ -50,9 +50,9 @@ windowSizeDecoder =
 
 
 {-| A screen class. Similar to `Element.DeviceClass` from `elm-ui`,
-but narrowed down to support only 2 devices both in grid layout and in the application code.
+but narrowed down to support only 3 devices both in grid layout and in the application code.
 Names differe from `Element.DeviceClass` to avoid import conflicts
-when importing everything from both `Element` and `GridLayout2`.
+when importing everything from both `Element` and `GridLayout3`.
 -}
 type ScreenClass
     = MobileScreen

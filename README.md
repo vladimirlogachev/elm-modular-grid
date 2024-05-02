@@ -101,7 +101,7 @@ init : Result Json.Decode.Error Flags -> Route () -> ( Model, Effect Msg )
 init flagsResult _ =
     case flagsResult of
         Ok flags ->
-            ( { window = GridLayout2.init layoutConfig flags.windowSize } , Effect.none )
+            ( { layout = GridLayout2.init layoutConfig flags.windowSize } , Effect.none )
 
         Err _ ->
             Debug.todo ""
@@ -110,7 +110,7 @@ update : Route () -> Msg -> Model -> ( Model, Effect Msg )
 update _ msg model =
     case msg of
         Shared.Msg.GotNewWindowSize newWindowSize ->
-            ( { model | window = GridLayout2.update model.layout newWindowSize }, Effect.none )
+            ( { model | layout = GridLayout2.update model.layout newWindowSize }, Effect.none )
 
 subscriptions : Route () -> Model -> Sub Msg
 subscriptions route model =

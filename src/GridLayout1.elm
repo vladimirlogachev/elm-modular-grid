@@ -1,15 +1,18 @@
 module GridLayout1 exposing
-    ( ScreenClass(..), LayoutState, LayoutConfig, WrappedConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
+    ( ScreenClass(..)
+    , LayoutState, LayoutConfig, WrappedConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
-    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
+    , gridRow, gridColumn, gridBox, widthOfGridSteps, widthOfGridStepsFloat, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, scaleProportionallyToWidthOfGridStepsFloat
     )
 
 {-| `GridLayout1` stands for 1 screen class: Mobile
 
+@docs ScreenClass
+
 
 # Shared
 
-@docs ScreenClass, LayoutState, LayoutConfig, WrappedConfig, GridMargin, WindowSize, windowSizeDecoder, init, update
+@docs LayoutState, LayoutConfig, WrappedConfig, GridMargin, WindowSize, windowSizeDecoder, init, update
 
 
 # Layout
@@ -19,34 +22,13 @@ module GridLayout1 exposing
 
 # Page
 
-@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
+@docs gridRow, gridColumn, gridBox, widthOfGridSteps, widthOfGridStepsFloat, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, scaleProportionallyToWidthOfGridStepsFloat
 
 -}
 
 import Element exposing (..)
 import Html.Attributes
 import Json.Decode
-
-
-
--- SHARED
-
-
-{-| A window size object coming from Flags and constructed from the `Browser.Events.onResize` event.
--}
-type alias WindowSize =
-    { width : Int
-    , height : Int
-    }
-
-
-{-| A decoder for the `WindowSize` type, for Flags.
--}
-windowSizeDecoder : Json.Decode.Decoder WindowSize
-windowSizeDecoder =
-    Json.Decode.map2 WindowSize
-        (Json.Decode.field "width" Json.Decode.int)
-        (Json.Decode.field "height" Json.Decode.int)
 
 
 {-| A screen class. Similar to `Element.DeviceClass` from `elm-ui`,
@@ -103,6 +85,19 @@ type alias LayoutConfig =
     }
 
 
+{-| `LayoutConfig` is not meant to be accessed from the client code, so it's wrapped in this type to prevent direct access.
+-}
+type WrappedConfig
+    = WrappedConfig LayoutConfig
+
+
+{-| A helper to access the wrapped config.
+-}
+accessConfig : WrappedConfig -> LayoutConfig
+accessConfig (WrappedConfig config) =
+    config
+
+
 {-| An option for grid margins.
 
   - `SameAsGutter` – the minimal modular grid margin will be the same as the gutter.
@@ -112,6 +107,23 @@ type alias LayoutConfig =
 type GridMargin
     = SameAsGutter
     | GridMargin Int
+
+
+{-| A window size object coming from Flags and constructed from the `Browser.Events.onResize` event.
+-}
+type alias WindowSize =
+    { width : Int
+    , height : Int
+    }
+
+
+{-| A decoder for the `WindowSize` type, for Flags.
+-}
+windowSizeDecoder : Json.Decode.Decoder WindowSize
+windowSizeDecoder =
+    Json.Decode.map2 WindowSize
+        (Json.Decode.field "width" Json.Decode.int)
+        (Json.Decode.field "height" Json.Decode.int)
 
 
 {-| Initializes the layout state, which then needs to be stored in some sort of `Shared.Model`.
@@ -167,10 +179,6 @@ update { config } window =
     init (accessConfig config) window
 
 
-
--- LAYOUT
-
-
 {-| A helper to build the application `Layout`. See Readme for example usage.
 -}
 bodyAttributes : LayoutState -> List (Attribute msg)
@@ -201,10 +209,6 @@ layoutInnerAttributes layout =
     , padding layout.grid.margin
     , centerX
     ]
-
-
-
--- PAGE
 
 
 {-| A helper to be used in application pages. See Readme for example usage.
@@ -276,21 +280,6 @@ widthOfGridSteps layout numberOfSteps =
     ]
 
 
-{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't match your needs.
--}
-heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
-heightOfGridSteps layout numberOfSteps =
-    let
-        baseHeight : Float
-        baseHeight =
-            widthOfGridStepsFloat layout numberOfSteps
-    in
-    [ Element.height Element.fill
-    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat baseHeight ++ "px")
-    , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
-    ]
-
-
 {-| An implementation detail, but can be used directly in applications without `elm-ui`.
 Returns the width of a specified number of grid steps (including gutters), in pixels, Float.
 -}
@@ -307,6 +296,21 @@ widthOfGridStepsFloat layout numberOfSteps =
                 / toFloat layout.grid.columnCount
     in
     (stepWidth * toFloat numberOfSteps) + (toFloat layout.grid.gutter * toFloat gutterCountBetween)
+
+
+{-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't match your needs.
+-}
+heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
+heightOfGridSteps layout numberOfSteps =
+    let
+        baseHeight : Float
+        baseHeight =
+            widthOfGridStepsFloat layout numberOfSteps
+    in
+    [ Element.height Element.fill
+    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat baseHeight ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
+    ]
 
 
 {-| A to scale an element to a specified width of steps, maintaining the original proportions (e.g. of an image which you want never to be cropped).
@@ -352,20 +356,3 @@ scaleProportionallyToWidthOfGridStepsFloat layout { originalWidth, originalHeigh
     { width = widthFloat
     , height = widthFloat * (toFloat originalHeight / toFloat originalWidth)
     }
-
-
-
--- IMPLEMENTATION DETAILS
-
-
-{-| `LayoutConfig` is not meant to be accessed from the client code, so it's wrapped in this type to prevent direct access.
--}
-type WrappedConfig
-    = WrappedConfig LayoutConfig
-
-
-{-| A helper to access the wrapped config.
--}
-accessConfig : WrappedConfig -> LayoutConfig
-accessConfig (WrappedConfig config) =
-    config

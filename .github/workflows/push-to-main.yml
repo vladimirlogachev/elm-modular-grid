@@ -54,11 +54,17 @@ jobs:
           cd example
           npm run check
 
-      - name: Upload artifact
+      - name: Upload example app artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: "example/dist"
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy example app to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Publish elm package (if version was bumped)
+        uses: dillonkearns/elm-publish-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-elm: ./node_modules/.bin/elm

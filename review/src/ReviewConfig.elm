@@ -48,11 +48,11 @@ config =
     , NoMissingSubscriptionsCall.rule
     , NoRecursiveUpdate.rule
     , NoUselessSubscriptions.rule
-    , NoUnsafeDivision.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
-    , NoUnused.CustomTypeConstructors.rule [] |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
-    , NoUnused.CustomTypeConstructorArgs.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
+    , NoUnsafeDivision.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm", "src/GridLayout3.elm" ]
+    , NoUnused.CustomTypeConstructors.rule [] |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm", "src/GridLayout3.elm" ]
+    , NoUnused.CustomTypeConstructorArgs.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm", "src/GridLayout3.elm" ]
     , NoUnused.Dependencies.rule
-    , NoUnused.Exports.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm" ]
+    , NoUnused.Exports.rule |> Rule.ignoreErrorsForFiles [ "src/GridLayout2.elm", "src/GridLayout3.elm" ]
     , NoUnused.Modules.rule
     , NoUnused.Parameters.rule
     , NoUnused.Patterns.rule
@@ -64,4 +64,3 @@ config =
     , NoPrematureLetComputation.rule
     , NoSimpleLetBody.rule
     ]
-        |> List.map (Rule.ignoreErrorsForDirectories [ ".elm-land/" ])

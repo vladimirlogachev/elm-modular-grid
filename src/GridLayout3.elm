@@ -1,13 +1,10 @@
-module GridLayout2 exposing
+module GridLayout3 exposing
     ( ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
     , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
     )
 
-{-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
-
-You can also switch to 3-screen version by replacing `GridLayout2` with `GridLayout3` everywhere in your code,
-and then follow compiler errors to adjust pattern matching of ScreenClass.
+{-| `GridLayout3` stands for 3 screen classes: Mobile and Desktop.
 
 
 # Shared
@@ -59,6 +56,7 @@ when importing everything from both `Element` and `GridLayout2`.
 -}
 type ScreenClass
     = MobileScreen
+    | TabletScreen
     | DesktopScreen
 
 
@@ -110,6 +108,13 @@ type alias LayoutConfig =
         , gutter : Int
         , margin : GridMargin
         }
+    , tabletScreen :
+        { minGridWidth : Int
+        , maxGridWidth : Maybe Int
+        , columnCount : Int
+        , gutter : Int
+        , margin : GridMargin
+        }
     , desktopScreen :
         { minGridWidth : Int
         , maxGridWidth : Maybe Int
@@ -138,8 +143,11 @@ init config window =
     let
         screenClass : ScreenClass
         screenClass =
-            if window.width < config.desktopScreen.minGridWidth then
+            if window.width < config.tabletScreen.minGridWidth then
                 MobileScreen
+
+            else if window.width < config.desktopScreen.minGridWidth then
+                TabletScreen
 
             else
                 DesktopScreen
@@ -176,6 +184,36 @@ init config window =
                 { contentWidth = clampedContentWidth
                 , columnCount = config.mobileScreen.columnCount
                 , gutter = config.mobileScreen.gutter
+                , margin = gridMargin
+                }
+
+            TabletScreen ->
+                let
+                    gridMargin : Int
+                    gridMargin =
+                        case config.tabletScreen.margin of
+                            SameAsGutter ->
+                                config.tabletScreen.gutter
+
+                            GridMargin margin ->
+                                margin
+
+                    maxGridWidth : Int
+                    maxGridWidth =
+                        config.tabletScreen.maxGridWidth
+                            |> Maybe.withDefault window.width
+
+                    clampedGridWidth : Int
+                    clampedGridWidth =
+                        clamp config.tabletScreen.minGridWidth maxGridWidth window.width
+
+                    clampedContentWidth : Int
+                    clampedContentWidth =
+                        clampedGridWidth - (gridMargin * 2)
+                in
+                { contentWidth = clampedContentWidth
+                , columnCount = config.tabletScreen.columnCount
+                , gutter = config.tabletScreen.gutter
                 , margin = gridMargin
                 }
 
@@ -246,6 +284,10 @@ layoutInnerAttributes layout =
             case layout.screenClass of
                 MobileScreen ->
                     layout.config.mobileScreen.maxGridWidth
+                        |> Maybe.withDefault layout.window.width
+
+                TabletScreen ->
+                    layout.config.tabletScreen.maxGridWidth
                         |> Maybe.withDefault layout.window.width
 
                 DesktopScreen ->
@@ -357,6 +399,9 @@ widthOfGridStepsFloat layout numberOfSteps =
             case layout.screenClass of
                 MobileScreen ->
                     layout.config.mobileScreen.columnCount
+
+                TabletScreen ->
+                    layout.config.tabletScreen.columnCount
 
                 DesktopScreen ->
                     layout.config.desktopScreen.columnCount

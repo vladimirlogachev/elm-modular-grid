@@ -4,7 +4,7 @@
   "summary": "Responsive modular grid layouts for Elm",
   "license": "MIT",
   "version": "1.0.0",
-  "exposed-modules": ["GridLayout2"],
+  "exposed-modules": ["GridLayout2", "GridLayout3"],
   "source-directories": ["src"],
   "elm-version": "0.19.1 <= v < 0.20.0",
   "dependencies": {

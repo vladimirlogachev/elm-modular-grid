@@ -50,9 +50,9 @@ jobs:
       - name: Check
         run: |
           set -eu
-          npm check
+          npm run check
           cd example
-          npm check
+          npm run check
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

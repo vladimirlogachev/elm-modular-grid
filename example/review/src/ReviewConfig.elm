@@ -64,4 +64,4 @@ config =
     , NoPrematureLetComputation.rule
     , NoSimpleLetBody.rule
     ]
-        |> List.map (Rule.ignoreErrorsForDirectories [ ".elm-land/", "../package/" ])
+        |> List.map (Rule.ignoreErrorsForDirectories [ ".elm-land/", "../" ])

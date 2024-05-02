@@ -19,17 +19,8 @@
           "content": "width=device-width, initial-scale=1.0"
         }
       ],
-      "link": [
-       
-        {
-          "rel": "icon",
-          "type": "image/svg+xml",
-          "href": "/icons/favicon.svg"
-        },
-        { "rel": "stylesheet", "href": "/styles/reset.css" }
-      ],
-      "script": [
-      ]
+      "link": [],
+      "script": []
     },
     "router": {
       "useHashRouting": true

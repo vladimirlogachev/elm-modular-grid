@@ -4,6 +4,8 @@ Responsive modular grid layouts for Elm.
 
 Designed for `elm-ui` and `elm-land`, but can be useful with `elm-css` or even pure CSS too.
 
+![Example](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/example-layout-preview.gif?raw=true)
+
 - Example: [live](https://vladimirlogachev.github.io/elm-modular-grid), [code](https://github.com/vladimirlogachev/elm-modular-grid/tree/main/example)
 
 ## What is a modular grid?
@@ -82,7 +84,7 @@ layoutConfig =
     { mobileScreen =
         { minGridWidth = 360
         , maxGridWidth = Just 720
-        , columnCount = 12
+        , columnCount = 6
         , gutter = 16
         , margin = GridLayout2.SameAsGutter
         }
@@ -123,7 +125,7 @@ import GridLayout2
 view : Shared.Model -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
 view shared { content } =
     { title = content.title
-    , attributes = content.attributes ++ GridLayout2.bodyAttributes shared.layout
+    , attributes = GridLayout2.bodyAttributes shared.layout ++ TextStyle.body ++ content.attributes
     , element =
         let
             outerElementAttrs : List (Attribute msg)
@@ -132,7 +134,7 @@ view shared { content } =
 
             innerElementAttrs : List (Attribute msg)
             innerElementAttrs =
-                [ Background.color Color.gridMarginBackground ]
+                []
 
             outerElement : List (Element msg) -> Element msg
             outerElement =
@@ -154,50 +156,66 @@ import GridLayout2 exposing (..)
 view : Shared.Model -> View msg
 view { layout } =
     { title = "elm-modular-grid"
-    , attributes = [ Background.color Color.bodyBackground ]
+    , attributes = []
     , element =
-        column
-            [ width fill
-            , spacing layout.grid.gutter
-            , case layout.screenClass of
-                MobileScreen ->
-                    Background.color Color.mobileScreenContentBackground
+        case layout.screenClass of
+            MobileScreen ->
+                viewMobile layout
 
-                DesktopScreen ->
-                    Background.color Color.desktopScreenContentBackground
-            ]
-            [ gridRow layout
-                [ gridColumn layout
-                    { widthSteps = 4 }
-                    [ Background.color Color.white, padding layout.grid.gutter, alignTop ]
-                    [ paragraph [] [ text "A column with width of 4 grid steps and an arbitrary height. " ]
-                    ]
-                , gridBox
-                    layout
-                    { widthSteps = 2
-                    , heightSteps = 4
-                    }
-                    [ Background.color Color.white, padding layout.grid.gutter ]
-                    [ paragraph [] [ text "A box with width of 2 modular grid steps and height of 4 steps, including gutters" ] ]
-                , gridBox
-                    layout
-                    { widthSteps = 6
-                    , heightSteps = 3
-                    }
-                    [ Background.color Color.white ]
-                    [ column [ centerX, centerY ] [ text "6 x 3 steps" ] ]
-                ]
-            ]
+            DesktopScreen ->
+                viewDesktop layout
     }
+
+
+viewMobile : LayoutState -> Element msg
+viewMobile layout =
+    column
+        [ width fill
+        , spacing layout.grid.gutter
+        ]
+        [ row [ width fill ] [ paragraph (width fill :: TextStyle.headerMobile) [ text pageTitle ] ]
+        , image
+            (scaleProportionallyToWidthOfGridSteps layout
+                { originalWidth = importantImage.sourceSize.width
+                , originalHeight = importantImage.sourceSize.height
+                , widthSteps = 6
+                }
+            )
+            { src = importantImage.url, description = importantImage.description }
+        , column [ spacing layout.grid.gutter ]
+            [ paragraph TextStyle.subheaderMobile [ text paragraphTitle ]
+            , paragraph [] [ text paragraphText ]
+            ]
+        , gridRow layout
+            [ viewBlockMobile layout { widthSteps = 3, heightSteps = 4 } block1
+            , viewBlockMobile layout { widthSteps = 3, heightSteps = 4 } block2
+            ]
+        , gridRow layout
+            [ viewBlockMobile layout { widthSteps = 4, heightSteps = 4 } block3
+            , viewBlockMobile layout { widthSteps = 2, heightSteps = 4 } block4
+            ]
+        ]
+
+
+viewBlockMobile : LayoutState -> { widthSteps : Int, heightSteps : Int } -> Block -> Element msg
+viewBlockMobile layout { widthSteps, heightSteps } block =
+    gridBox
+        layout
+        { widthSteps = widthSteps
+        , heightSteps = heightSteps
+        }
+        [ Background.color block.color
+        , Font.color Color.white
+        , padding layout.grid.gutter
+        ]
+        [ paragraph TextStyle.subheaderMobile [ text block.title ]
+        , paragraph [ alignBottom, width fill, Font.alignRight ] [ text block.description ]
+        ]
+
+
+viewDesktop : LayoutState -> Element msg
+viewDesktop layout =
+    Debug.todo ""
 ```
 
-### Result
-
-![Result](https://github.com/vladimirlogachev/elm-modular-grid/blob/main/docs/example-usage-result.jpg?raw=true)
-
-## Package Development
-
-- Build and preview docs
-  - `npm run build -- --docs docs.json`
-  - Open https://elm-doc-preview.netlify.app
-  - Open Files -> `README.md` and `docs.json` -> review... -> Close Preview
+[Complete example code](https://github.com/vladimirlogachev/elm-modular-grid/tree/main/example).

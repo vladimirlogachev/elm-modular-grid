@@ -60,7 +60,7 @@ layoutConfig =
     { mobileScreen =
         { minGridWidth = 360
         , maxGridWidth = Just 720
-        , columnCount = 12
+        , columnCount = 6
         , gutter = 16
         , margin = GridLayout2.SameAsGutter
         }

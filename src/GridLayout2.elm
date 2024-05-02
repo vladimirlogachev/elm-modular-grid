@@ -1,7 +1,7 @@
 module GridLayout2 exposing
     ( ScreenClass(..), LayoutState, LayoutConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
     , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
-    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, widthOfGridStepsFloat
+    , gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
     )
 
 {-| `GridLayout2` stands for 2 screen classes: Mobile and Desktop.
@@ -19,7 +19,7 @@ module GridLayout2 exposing
 
 # Page
 
-@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, widthOfGridStepsFloat
+@docs gridRow, gridColumn, gridBox, widthOfGridSteps, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, widthOfGridStepsFloat, scaleProportionallyToWidthOfGridStepsFloat
 
 -}
 
@@ -331,7 +331,7 @@ heightOfGridSteps layout numberOfSteps =
             widthOfGridStepsFloat layout numberOfSteps
     in
     [ Element.height Element.fill
-    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling baseHeight) ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat baseHeight ++ "px")
     , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
     ]
 
@@ -365,3 +365,48 @@ widthOfGridStepsFloat layout numberOfSteps =
                 / toFloat columnCount
     in
     (stepWidth * toFloat numberOfSteps) + (toFloat gutterWidth * toFloat gutterCountBetween)
+
+
+{-| A to scale an element to specified width of steps, maintaining the original proportions (e.g. of an image which you want never to be cropped).
+-}
+scaleProportionallyToWidthOfGridSteps :
+    LayoutState
+    ->
+        { originalWidth : Int
+        , originalHeight : Int
+        , widthSteps : Int
+        }
+    -> List (Attribute msg)
+scaleProportionallyToWidthOfGridSteps layout params =
+    let
+        { width, height } =
+            scaleProportionallyToWidthOfGridStepsFloat layout params
+    in
+    widthOfGridSteps layout params.widthSteps
+        ++ [ Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromFloat width ++ "px")
+           , Element.htmlAttribute <| Html.Attributes.style "min-width" (String.fromFloat width ++ "px")
+           , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling height) ++ "px")
+           , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat height ++ "px")
+           ]
+
+
+{-| An implementation detail, but can be used directly in applications without `elm-ui`.
+Returns the width and height of block scaled to width of specified number of grid steps (including gutters), in pixels, Float.
+-}
+scaleProportionallyToWidthOfGridStepsFloat :
+    LayoutState
+    ->
+        { originalWidth : Int
+        , originalHeight : Int
+        , widthSteps : Int
+        }
+    -> { width : Float, height : Float }
+scaleProportionallyToWidthOfGridStepsFloat layout { originalWidth, originalHeight, widthSteps } =
+    let
+        widthFloat : Float
+        widthFloat =
+            widthOfGridStepsFloat layout widthSteps
+    in
+    { width = widthFloat
+    , height = widthFloat * (toFloat originalHeight / toFloat originalWidth)
+    }

@@ -8,6 +8,7 @@ import GridLayout2
 import Layout exposing (Layout)
 import Route exposing (Route)
 import Shared
+import TextStyle
 import View exposing (View)
 
 
@@ -65,7 +66,7 @@ update msg model =
 view : Shared.Model -> { toContentMsg : Msg -> contentMsg, content : View contentMsg, model : Model } -> View contentMsg
 view shared { content } =
     { title = content.title
-    , attributes = content.attributes ++ GridLayout2.bodyAttributes shared.layout
+    , attributes = GridLayout2.bodyAttributes shared.layout ++ TextStyle.body ++ content.attributes
     , element =
         let
             outerElementAttrs : List (Attribute msg)
@@ -74,7 +75,7 @@ view shared { content } =
 
             innerElementAttrs : List (Attribute msg)
             innerElementAttrs =
-                [ Background.color Color.gridMarginBackground ]
+                []
 
             outerElement : List (Element msg) -> Element msg
             outerElement =

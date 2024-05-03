@@ -3,7 +3,7 @@
     "name": "vladimirlogachev/elm-modular-grid",
     "summary": "Responsive modular grid layouts for Elm",
     "license": "MIT",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "exposed-modules": [
         "GridLayout1",
         "GridLayout2",

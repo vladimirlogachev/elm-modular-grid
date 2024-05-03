@@ -329,7 +329,12 @@ gridColumn :
     -> List (Element msg)
     -> Element msg
 gridColumn layout { widthSteps } attrs elements =
-    column (widthOfGridSteps layout widthSteps ++ attrs) elements
+    {- Note: the elements are wrapped twice because if we don't,
+       and if client attrs set inline style as Html.Attributes.attribute,
+       the inline style will be overriden and the layout will break.
+    -}
+    column (widthOfGridSteps layout widthSteps)
+        [ column (width fill :: attrs) elements ]
 
 
 {-| A helper to be used in application pages.
@@ -347,12 +352,12 @@ gridBox :
     -> List (Element msg)
     -> Element msg
 gridBox layout { widthSteps, heightSteps } attrs elements =
-    column
-        (widthOfGridSteps layout widthSteps
-            ++ heightOfGridSteps layout heightSteps
-            ++ attrs
-        )
-        elements
+    {- Note: the elements are wrapped twice because if we don't,
+       and if client attrs set inline style as Html.Attributes.attribute,
+       the inline style will be overriden and the layout will break.
+    -}
+    column (widthOfGridSteps layout widthSteps ++ heightOfGridSteps layout heightSteps)
+        [ column ([ width fill, height fill ] ++ attrs) elements ]
 
 
 {-| A helper to be used in application pages with `elm-ui` whenever `gridColumn` and `gridBox` don't match your needs.
@@ -360,8 +365,8 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
 widthOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 widthOfGridSteps layout numberOfSteps =
     let
-        baseWidth : Float
-        baseWidth =
+        calculatedWidth : Float
+        calculatedWidth =
             widthOfGridStepsFloat layout numberOfSteps
     in
     [ -- We must allow elements to grow in order to avoid hairline-thin paddings on the right of each row
@@ -370,10 +375,10 @@ widthOfGridSteps layout numberOfSteps =
     -- We must prevent elements of width 1 to grow to all 12.
     -- If we use float value here, we would effectively cancel the "width fill" attribute.
     -- So we use Int to allow to grow just a bit, up to 1 px.
-    , Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromInt (ceiling baseWidth) ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromInt (ceiling calculatedWidth) ++ "px")
 
     -- This is what actually sets the width. We must use float to maintain constant gutters between elements of different rows
-    , Element.htmlAttribute <| Html.Attributes.style "min-width" (String.fromFloat baseWidth ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "min-width" (String.fromFloat calculatedWidth ++ "px")
     ]
 
 
@@ -400,13 +405,13 @@ widthOfGridStepsFloat layout numberOfSteps =
 heightOfGridSteps : LayoutState -> Int -> List (Attribute msg)
 heightOfGridSteps layout numberOfSteps =
     let
-        baseHeight : Float
-        baseHeight =
+        calculatedHeight : Float
+        calculatedHeight =
             widthOfGridStepsFloat layout numberOfSteps
     in
     [ Element.height Element.fill
-    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat baseHeight ++ "px")
-    , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat baseHeight ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat calculatedHeight ++ "px")
+    , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat calculatedHeight ++ "px")
     ]
 
 
@@ -428,7 +433,7 @@ scaleProportionallyToWidthOfGridSteps layout params =
     widthOfGridSteps layout params.widthSteps
         ++ [ Element.htmlAttribute <| Html.Attributes.style "max-width" (String.fromFloat width ++ "px")
            , Element.htmlAttribute <| Html.Attributes.style "min-width" (String.fromFloat width ++ "px")
-           , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromInt (ceiling height) ++ "px")
+           , Element.htmlAttribute <| Html.Attributes.style "max-height" (String.fromFloat height ++ "px")
            , Element.htmlAttribute <| Html.Attributes.style "min-height" (String.fromFloat height ++ "px")
            ]
 

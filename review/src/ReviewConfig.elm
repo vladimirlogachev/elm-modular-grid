@@ -58,7 +58,7 @@ config =
     , NoUnused.Patterns.rule
     , NoExposingEverything.rule
     , NoUnused.Variables.rule
-    , NoImportingEverything.rule [ "Element", "GridLayout2" ]
+    , NoImportingEverything.rule [ "Element" ]
     , NoMissingTypeAnnotation.rule
     , NoMissingTypeAnnotationInLetIn.rule
     , NoPrematureLetComputation.rule

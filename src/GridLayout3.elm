@@ -333,7 +333,7 @@ gridColumn layout { widthSteps } attrs elements =
        and if client attrs set inline style as Html.Attributes.attribute,
        the inline style will be overriden and the layout will break.
     -}
-    column (widthOfGridSteps layout widthSteps)
+    column (alignTop :: height fill :: widthOfGridSteps layout widthSteps)
         [ column (width fill :: attrs) elements ]
 
 
@@ -356,7 +356,7 @@ gridBox layout { widthSteps, heightSteps } attrs elements =
        and if client attrs set inline style as Html.Attributes.attribute,
        the inline style will be overriden and the layout will break.
     -}
-    column (widthOfGridSteps layout widthSteps ++ heightOfGridSteps layout heightSteps)
+    column (alignTop :: widthOfGridSteps layout widthSteps ++ heightOfGridSteps layout heightSteps)
         [ column ([ width fill, height fill ] ++ attrs) elements ]
 
 

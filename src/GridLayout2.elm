@@ -1,7 +1,7 @@
 module GridLayout2 exposing
     ( ScreenClass(..)
     , LayoutState, LayoutConfig, WrappedConfig, GridMargin(..), WindowSize, windowSizeDecoder, init, update
-    , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
+    , bodyAttributes, layoutOuterAttributes, layoutInnerAttributes, section
     , gridRow, gridColumn, gridBox, widthOfGridSteps, widthOfGridStepsFloat, heightOfGridSteps, scaleProportionallyToWidthOfGridSteps, scaleProportionallyToWidthOfGridStepsFloat
     )
 
@@ -17,7 +17,7 @@ module GridLayout2 exposing
 
 # Layout
 
-@docs bodyAttributes, layoutOuterAttributes, layoutInnerAttributes
+@docs bodyAttributes, layoutOuterAttributes, layoutInnerAttributes, section
 
 
 # Page
@@ -245,22 +245,62 @@ layoutOuterAttributes =
 -}
 layoutInnerAttributes : LayoutState -> List (Attribute msg)
 layoutInnerAttributes layout =
-    let
-        maxWidth : Int
-        maxWidth =
-            case layout.screenClass of
-                MobileScreen ->
-                    (accessConfig layout.config).mobileScreen.maxGridWidth
-                        |> Maybe.withDefault layout.window.width
-
-                DesktopScreen ->
-                    (accessConfig layout.config).desktopScreen.maxGridWidth
-                        |> Maybe.withDefault layout.window.width
-    in
-    [ width (fill |> maximum maxWidth)
+    [ width (fill |> maximum (innerElementMaxWidth layout))
     , padding layout.grid.margin
     , centerX
     ]
+
+
+{-| Implementation detail.
+-}
+innerElementMaxWidth : LayoutState -> Int
+innerElementMaxWidth layout =
+    case layout.screenClass of
+        MobileScreen ->
+            (accessConfig layout.config).mobileScreen.maxGridWidth
+                |> Maybe.withDefault layout.window.width
+
+        DesktopScreen ->
+            (accessConfig layout.config).desktopScreen.maxGridWidth
+                |> Maybe.withDefault layout.window.width
+
+
+{-| Use this helper to build pages containing multiple sections, each with full-width background.
+The `content` will obey the modular grid, while the `outerElementAttrs`
+allows you to set the background color, gradient, or image.
+
+Important note:
+
+  - The `section` inner element only sets `left` and `right` grid margins.
+    The `top` and `bottom` are unset for versatility.
+  - The `content` only needs to have the `top` and `bottom` paddings set,
+    e.g.: `paddingEach { top = layout.grid.margin, bottom = layout.grid.margin, right = 0, left = 0 }`
+    or `paddingXY 0 20`.
+
+-}
+section : LayoutState -> { outerElementAttrs : List (Attribute msg) } -> Element msg -> Element msg
+section layout { outerElementAttrs } content =
+    let
+        innerElementAttrs : List (Attribute msg)
+        innerElementAttrs =
+            []
+
+        outerElement : List (Element msg) -> Element msg
+        outerElement =
+            column (layoutOuterAttributes ++ outerElementAttrs)
+
+        sectionInnerAttributes : List (Attribute msg)
+        sectionInnerAttributes =
+            [ width (fill |> maximum (innerElementMaxWidth layout))
+            , paddingXY layout.grid.margin 0
+            , centerX
+            ]
+
+        innerElement : List (Element msg) -> Element msg
+        innerElement =
+            column (sectionInnerAttributes ++ innerElementAttrs)
+    in
+    outerElement [ innerElement [ content ] ]
 
 
 {-| A helper to be used in application pages. See Readme for example usage.
